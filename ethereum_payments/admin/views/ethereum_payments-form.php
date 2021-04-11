@@ -12,12 +12,22 @@
         echo c9wep_text('payment_status','Payment status',$item->payment_status,true); 
         echo c9wep_text('store_currency','Store currency',$item->store_currency,true); 
         echo c9wep_text('transaction_id','Transaction id',$item->transaction_id,true); 
+        echo c9wep_text('transaction_status','Transaction status',$item->transaction_status,true); 
+        echo c9wep_text('transaction_hash','Transaction hash',$item->transaction_hash,true); 
+        echo c9wep_text('blockHash','Block hash',$item->blockHash,true); 
+        echo c9wep_text('from_address','From address',$item->from_address,true); 
+        echo c9wep_text('my_address','My address',$item->my_address,true); 
 //        echo c9wep_datetimepicker('created_at','Created at',$item->created_at,true); 
 //        echo c9wep_datetimepicker('updated_at','Updated at',$item->updated_at,true); 
+        echo c9wep_textarea('transaction_init','Transaction init',$item->transaction_init,true); 
+        echo c9wep_textarea('transaction_confirm','Transaction confirm',$item->transaction_confirm,true); 
         echo c9wep_text('order_id','Order id',$item->order_id,true); 
+        echo c9wep_text('confirmations','Confirmations',$item->confirmations,true); 
+        echo c9wep_text('blockNumber','Block number',$item->blockNumber,true); 
         echo c9wep_number('order_total','Order total',$item->order_total,true); 
         echo c9wep_number('exchange_rate','Exchange rate',$item->exchange_rate,true); 
         echo c9wep_number('amount','Amount',$item->amount,true); 
+        echo c9wep_number('eth_amount','Eth amount',$item->eth_amount,true); 
         ?>
         <input type="hidden" name="field_id" value="<?php echo $item->id; ?>">
 

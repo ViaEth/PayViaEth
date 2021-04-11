@@ -92,29 +92,43 @@ function c9wep_insert_ethereum_payments( $args = array() ) {
         'id' => '',
 //        'created_at' => '',
 //        'updated_at' => '',
-        'payment_status' => '',
-        'store_currency' => '',
-        'transaction_id' => '',
-//        'created_at' => '',
-//        'updated_at' => '',
-        'order_id' => '',
-        'order_total' => '',
-        'exchange_rate' => '',
-        'amount' => '',
+//         'expired_time'=>'',
+//         'payment_status' => '',
+//         'order_status' => '',
+//         'payment_mode' => '',
+//         'store_currency' => '',
+//         'track_id' => '',
+//         'transaction_id' => '',
+//         'transaction_status' => '',
+//         'transaction_hash' => '',
+//         'blockHash' => '',
+//         'from_address' => '',
+//         'my_address' => '',
+// //        'created_at' => '',
+// //        'updated_at' => '',
+//         'transaction_init' => '',
+//         'transaction_confirm' => '',
+//         'order_id' => '',
+//         'confirmations' => '',
+//         'blockNumber' => '',
+//         'order_total' => '',
+//         'exchange_rate' => '',
+//         'amount' => '',
+//         'eth_amount' => '',
     );
 
     $args       = wp_parse_args( $args, $defaults );
     $table_name =   $wpdb->prefix . "c9wep_ethereum_payments";
-    // if(empty($args['id'])){
-    //     $saved_args['where']=[
-    //         //condition here
-    //     ];
-    //     $saved_obj=c9wep_get_all_ethereum_payments($saved_args);
+    if(empty($args['id'])){
+        $saved_args['where']=[
+            'order_id'=>$args['order_id']
+        ];
+        $saved_obj=c9wep_get_all_ethereum_payments($saved_args);
 
-    //     if(isset($saved_obj[0])){
-    //         $args['id']=$saved_obj[0]->id;
-    //     }
-    // }
+        if(isset($saved_obj[0])){
+            $args['id']=$saved_obj[0]->id;
+        }
+    }
     // some basic validation
     // if ( empty( $args['ethereum_payments_name'] ) ) {
     //     return new WP_Error( 'no-ethereum_payments_name', __( 'No Campaign Name provided.', 'c9wep' ) );

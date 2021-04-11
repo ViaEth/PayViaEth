@@ -24,7 +24,7 @@ function c9wep_init_gateway_class() {
             $this->id = 'ethereumpay'; // payment gateway plugin ID
             $this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
             $this->has_fields = true; // in case you need a custom credit card form
-            $this->method_title = 'Ethereum Payment';
+            $this->method_title = 'Pay with Ether';
             $this->method_description = 'Description of Ethereum Payment'; // will be displayed on the options page
          
             // gateways can support subscriptions, refunds, saved payment methods,
@@ -41,26 +41,38 @@ function c9wep_init_gateway_class() {
             $this->title = $this->get_option( 'title' );
             $this->description = $this->get_option( 'description' );
             $this->enabled = $this->get_option( 'enabled' );
-            $this->testmode = 'yes' === $this->get_option( 'testmode' );
-            $this->wallet_address = $this->testmode ? $this->get_option( 'test_wallet_address' ) : $this->get_option( 'wallet_address' );
-            $this->api_key = $this->testmode ? $this->get_option( 'test_api_key' ) : $this->get_option( 'api_key' );
+            $this->testmode = $this->is_test_mode();
+            $this->wallet_addresses = $this->testmode ? $this->get_option( 'test_wallet_addresses' ) : $this->get_option( 'wallet_addresses' );
+            // $this->apikey = $this->testmode ? $this->get_option( 'test_apikey' ) : $this->get_option( 'apikey' );
+            $this->apikey = $this->testmode ? $this->get_option( 'test_apikey' ) : $this->get_option( 'apikey' );
          
-            if($this->testmode){
-                $this->simulator_mode = 'yes' === $this->get_option( 'simulator_mode' );
-            }
-            if($this->simulator_mode){
-                //$this->password=c9wep_ethereumpay_get_simulator_password();
-            }
-	    
-            $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
-            add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));  
+            // $test_wallet_addresses=$this->get_option('test_wallet_addresses');
+            // ob_start();
+            // print_r($test_wallet_addresses);
+            // echo PHP_EOL;
+            // echo PHP_EOL;
+            // echo PHP_EOL;
+            // echo PHP_EOL;
+            // $data1=ob_get_clean();
+            // file_put_contents(dirname(__FILE__)  . '/test_wallet_addresses.log',$data1,FILE_APPEND);
+            // if($this->testmode){
+            //     $this->simulator_mode = 'yes' === $this->get_option( 'simulator_mode' );
+            // }
+            // if($this->simulator_mode){
+            //     //$this->password=c9wep_ethereumpay_get_simulator_password();
+            // }
+
+        	$this->icon = C9WEP_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
+
+            // $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
+            // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));  
 	    
             // This action hook saves the settings
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
          
             add_action('woocommerce_receipt_' . $this->id, array($this, 'receipt_page'));   
             // We need custom JavaScript to obtain a token
-            add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
+            // add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
             //add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) ); 
             // You can also register a webhook here
             // add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) );
@@ -68,6 +80,18 @@ function c9wep_init_gateway_class() {
  
         public function get_callback_url(){
             // return c9wep_get_callback_url($this->id);
+        }
+
+        public function get_callback_url_b0(){
+            // return c9wep_get_callback_url($this->id);
+        }
+
+        public function get_api_description(){
+            return 'You can get apikey from <a href="https://etherscan.io/myapikey" target="_blank">https://etherscan.io/myapikey</a>, the same apikey can be used for both test and live mode if you want,<br/>for a <b>free API plan</b>, there is a limitation on number of API call(<b>5 calls per second</b>), so, if you use a <b>free API plan</b> in a high traffic site, most of API call may failed since the limitation of API plan';
+        }
+
+        public function get_wallet_addresses_description(){
+            return 'When a customer make a transaction by scanning QR Code, the combination of ether amount and one of above wallet address is the only way that we can use to track the transaction from ethereum network, in short, if two customers pay the same ether amount to the same wallet address, we have no idea who paid the order, to avoid such kind of potential collision, as many as wallet addresses will be a reasonable solution';
         }
         /**
          * Plugin options, we deal with it in Step 3 too
@@ -79,21 +103,81 @@ function c9wep_init_gateway_class() {
                     'title'       => 'Enable/Disable',
                     'label'       => 'Enable Ethereum Payment',
                     'type'        => 'checkbox',
-                    'description' => '',
+                    'description' => ($this->is_test_mode()) ? '<b style="color:red;">This payment is in Test Mode</b>' : '',
                     'default'     => 'no'
                 ),
                 'title' => array(
                     'title'       => 'Title',
                     'type'        => 'text',
                     'description' => 'This controls the title which the user sees during checkout.',
-                    'default'     => 'Ethereum Payment',
+                    'default'     => 'Pay with Ether',
                     'desc_tip'    => true,
                 ),
                 'description' => array(
                     'title'       => 'Description',
                     'type'        => 'textarea',
                     'description' => 'This controls the description which the user sees during checkout.',
-                    'default'     => 'Pay with etherum.',
+                    'default'     => 'Pay with ether.',
+                ),
+                'apikey' => array(
+                    'title'       => 'Etherscan API Key(live mode)',
+                    'type'        => 'password',
+                    'description' => $this->get_api_description(),
+                ),
+                'check_live_connection' => array(
+                    'title'       => 'Check Live Connection',
+                    'type'        => 'link',
+                    'description' => 'Check Live Connection to etherscan.io with above live API Key',
+                ),
+                // 'wallet_address' => array(
+                //     'title'       => 'Live Wallet Address',
+                //     'type'        => 'text'
+                // ),
+                'wallet_addresses' => array(
+                  'title'             => __( 'Live Wallet Addresses', 'woocommerce-integration-demo' ),
+                  'type'              => 'ether_addresses',
+                  'addresses' => $this->get_option('wallet_addresses'),
+                  'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
+                  'sanitize_callback'=>array($this, 'sanitize_wallet_address'),//'sanitize_wallet_address',
+                  'desc_tip'          => true,
+                ),
+                'total_time_transaction_timeout' => array(
+                    'title'       => 'Total transaction lifetime timeout',
+                    'type'        => 'select',
+                    'options'=>[
+                        15 => '15 Minutes',
+                        20 => '20 Minutes',
+                        25 => '25 Minutes',
+                        30 => '30 Minutes',
+                        35 => '35 Minutes',
+                    ],
+                    'default'     => 15,
+                    'description' => 'If there is no transaction was confrimed in above time threshod, the payment will be set as payment expired, the default value is 15 minutes',
+                ),
+                'interval_to_check_transaction_status' => array(
+                    'title'       => 'The inverval to check transaction status',
+                    'type'        => 'select',
+                    'options'=>[
+                        15 => 'Every 15 Seconds',
+                        20 => 'Every 20 Seconds',
+                        25 => 'Every 25 Seconds',
+                        30 => 'Every 30 Seconds',
+                    ],
+                    'default'     => 15,
+                    'description' => 'The interval that we scan the etherscan.io to get the transaction status by retrieving a transaction list with our wallet address, the default value is every 15 seconds since the time of a bock creation on ethereum network may take 13 seconds, so, there is no need to set a short period time than that',
+                ),
+                'c9wep_check_transaction_status_interval' => array(
+                    'title'       => 'The inverval to check transaction status(cronjob)',
+                    'type'        => 'select',
+                    'options'=>[
+                      '3_minutes'=>__('3 Minutes','c9wep'),
+                      '5_minutes'=>__('5 Minutes','c9wep'),
+                      '8_minutes'=>__('8 Minutes','c9wep'),
+                      '10_minutes'=>__('10 Minutes','c9wep'),
+                    ],
+                    'sanitize_callback'=>array($this, 'sanitize_c9wep_check_transaction_status_interval'),
+                    'default'     => 5,
+                    'description' => 'If the browser was closed accidently when customer try to make a payment, we use this cronjob to scan the ethereum network for the order which is not expired on payment',
                 ),
                 'testmode' => array(
                     'title'       => 'Test mode',
@@ -103,30 +187,308 @@ function c9wep_init_gateway_class() {
                     'default'     => 'yes',
                     'desc_tip'    => true,
                 ),
-                'simulator_mode' => array(
-                        'title'   => __( 'Test With Simulator', 'woocommerce' ),
-                        'type'    => 'checkbox',
-                        'label'   => __( 'Enable Simulator', 'woocommerce' ),
-                        'description' => 'Enable this option to allow you test payment workflow without sending data to actually wallet address(only work in test mode)',
-                        'default' => 'no'
-                ),
-                'test_api_key' => array(
-                    'title'       => 'Test API Key',
-                    'type'        => 'text'
-                ),
-                'test_wallet_address' => array(
-                    'title'       => 'Test Wallet Address',
+                // 'simulator_mode' => array(
+                //         'title'   => __( 'Test With Simulator', 'woocommerce' ),
+                //         'type'    => 'checkbox',
+                //         'label'   => __( 'Enable Simulator', 'woocommerce' ),
+                //         'description' => 'Enable this option to allow you test payment workflow without sending data to actually wallet address(only work in test mode)',
+                //         'default' => 'no'
+                // ),
+                'test_apikey' => array(
+                    'title'       => 'Etherscan API Key(test mode)',
                     'type'        => 'text',
+                    'description' => $this->get_api_description(),
                 ),
-                'api_key' => array(
-                    'title'       => 'Live API Key',
-                    'type'        => 'password'
+                'test_network' => array(
+                    'title'       => 'Test Network',
+                    'type'        => 'select',
+                    'options'=>c9wep_get_test_networks(),
+                    // [
+                    //     'kovan'=>'Kovan Testnet',
+                    //     'ropsten'=>'Ropsten Testnet',
+                    //     'rinkeby'=>'Rinkeby Testnet',
+                    //     'goerli'=>'Goerli Testnet',
+                    // ],
+                    'default'     => 'kovan',
+                    'description' => 'Please make sure set your test wallet address to the same network with above setting',
                 ),
-                'wallet_address' => array(
-                    'title'       => 'Live Wallet Address',
-                    'type'        => 'text'
-                )
+                'check_test_connection' => array(
+                    'title'       => 'Check Test Mode Connection',
+                    'type'        => 'link',
+                    'description' => 'Check Test Mode Connection to etherscan.io with above test API Key and above test network',
+                ),
+                // 'test_wallet_address' => array(
+                //     'title'       => 'Test Wallet Address',
+                //     'type'        => 'text',
+                // ),
+                'test_wallet_addresses' => array(
+                  'title'             => __( 'Test Wallet Addresses', 'woocommerce-integration-demo' ),
+                  'type'              => 'ether_addresses',
+                  'addresses' => $this->get_option('test_wallet_addresses'),
+                  'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
+                  'sanitize_callback'=>array($this, 'sanitize_test_wallet_address'),
+                  'desc_tip'          => true,
+                ),
             );
+        }
+
+        public function get_wallet_addresses() {
+          if($this->is_test_mode()){
+            return $this->get_option('test_wallet_addresses');
+          }else{
+            return $this->get_option('wallet_addresses');
+          }
+        }
+
+        public function sanitize_c9wep_check_transaction_status_interval( $input ) {
+            c9wep_setup_check_transaction_status_cron_job('c9wep_check_transaction_status_cron_hook', $input);
+            return $input; 
+        }
+
+        public function sanitize_test_wallet_address( $input ) {
+            return $input;
+        }
+
+        public function sanitize_wallet_address( $input ) {
+            return $input;
+        }
+
+        public function get_total_time_transaction_timeout(){
+          return $this->get_option( 'total_time_transaction_timeout' );
+        }
+
+        public function get_interval_check_status(){
+          return $this->get_option( 'interval_to_check_transaction_status' );
+        }
+        /**
+         * Initialize integration settings form fields.
+         *
+         * @return void
+         */
+        public function init_form_fields_b0() {
+          $this->form_fields = array(
+            // don't forget to put your other settings here
+                
+            'test_wallet_addresses' => array(
+              'title'             => __( 'Customize!', 'woocommerce-integration-demo' ),
+              'type'              => 'ether_addresses',
+              'custom_attributes' => array(
+                'onclick' => "location.href='http://www.woothemes.com'",
+              ),
+              'description'       => __( 'Customize your settings by going to the integration site directly.', 'woocommerce-integration-demo' ),
+              'desc_tip'          => true,
+            )
+          );
+        }
+        
+        public function get_ether_address_view_root_with_key( $key ) {
+          if('test_wallet_addresses'==$key){
+            $network=$this->get_option( 'test_network' );
+          }else if('wallet_addresses'==$key){
+            $network='main';
+          }
+
+          return $network;//c9wep_get_transaction_networks($network);
+        }
+        
+        public function get_form_field_with_key( $key ) {
+          $field    = $this->plugin_id . $this->id . '_' . $key;
+          return $field;
+        }
+
+        /**
+         * Generate Button HTML.
+         *
+         * @access public
+         * @param mixed $key
+         * @param mixed $data
+         * @since 1.0.0
+         * @return string
+         */
+        public function generate_ether_addresses_html( $key, $data ) {
+          // $field    = $this->plugin_id . $this->id . '_' . $key;
+          $field    = $this->get_form_field_with_key($key);
+          $defaults = array(
+            'class'             => '',
+            'css'               => '',
+            'addresses' => array(),
+            'desc_tip'          => false,
+            'description'       => '',
+            'title'             => '',
+          );
+        
+          $data = wp_parse_args( $data, $defaults );
+        
+          ob_start();
+          ?>
+          <tr valign="top">
+            <th scope="row" class="titledesc">
+              <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+              <?php echo $this->get_tooltip_html( $data ); ?>
+            </th>
+            <td class="forminp">
+                <div class="address-wrapper">
+                    <table class="table table-hover table-addresses">
+                      <thead>
+                        <tr>
+                          <th class="th-no">No</th>
+                          <th class="th-address">Address</th>
+                          <th class="th-action">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        for ($i=1; $i <11 ; $i++):
+                        ?>
+                            <tr>
+                              <td>
+                                  <?php echo '#' . $i; ?>
+                              </td>
+                              <td class="td-address">
+                                 <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
+                              </td>
+                              <td class="td-action">
+                                <?php 
+                                  $network=$this->get_ether_address_view_root_with_key($key);
+                                  $link=c9wep_get_wallet_address_transaction_view_link($network,$data['addresses'][$i], 'view');
+                                  echo $link;
+                                ?>
+                                <?php if(false): ?>
+                                 <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
+                                <?php endif;//end false ?>
+                              </td>
+                            </tr>
+                        <?php
+                        endfor;
+                        ?>
+                      </tbody>
+                    </table>
+                </div>
+                <p class="description">
+                    <?php echo $data['description'];//$this->get_description_html(  ); ?>
+                </p>
+                <style type="text/css">
+                    .address-wrapper{
+                        height: 12rem;
+                        overflow-y: scroll;
+                        max-width: 500px;
+                        background: #fff;
+                        padding: 5px;
+                        border: 1px solid #999;
+                        border-radius: 5px;
+                    }
+
+                    .table-addresses th,
+                    .table-addresses td{
+                        padding: 5px !important;
+                    }
+
+                    .woocommerce .table-addresses th.th-no{
+                        width: 30px;
+                    }
+                    .woocommerce .table-addresses th.th-address{
+                        width: 99%;
+                    }
+
+                    .woocommerce .table-addresses .td-address input{
+                        width: 100% !important;
+                    }
+                </style>
+                <?php if(false): ?>
+              <fieldset>
+                <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php echo wp_kses_post( $data['title'] ); ?></button>
+                <?php echo $this->get_description_html( $data ); ?>
+              </fieldset>
+                <?php endif;//end false ?>
+            </td>
+          </tr>
+          <?php
+          return ob_get_clean();
+        }
+
+        public function empty_apikey_notice() {
+            return '<b>Please set above apikey first if you want to check connection</b>';
+        }
+
+        public function get_ether_network() {
+          if($this->is_test_mode()){
+            return $this->get_option( 'test_network' );
+          }else{
+            return 'main';
+          }
+        }
+
+        public function get_api_args() {
+          if($this->is_test_mode()){
+              $args=[
+                  'endpoint'=>$this->get_option( 'test_network' ),
+                  'apikey'=>$this->get_option( 'test_apikey' ),
+              ];
+          }else{
+              $args=[
+                  'endpoint'=>'main',
+                  'apikey'=>$this->get_option( 'apikey' ),
+              ];
+          }
+
+          return $args;
+        }
+        /**
+         * Generate Button HTML.
+         *
+         * @access public
+         * @param mixed $key
+         * @param mixed $data
+         * @since 1.0.0
+         * @return string
+         */
+        public function generate_link_html( $key, $data ) {
+          $field    = $this->plugin_id . $this->id . '_' . $key;
+          $defaults = array(
+            'class'             => 'button-secondary',
+            'css'               => '',
+            'custom_attributes' => array(),
+            'desc_tip'          => false,
+            'description'       => '',
+            'title'             => '',
+          );
+        
+          $data = wp_parse_args( $data, $defaults );
+        
+          ob_start();
+          ?>
+          <tr valign="top">
+            <th scope="row" class="titledesc">
+              <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+              <?php echo $this->get_tooltip_html( $data ); ?>
+            </th>
+            <td class="forminp">
+              <fieldset>
+                <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                <?php 
+                    if('check_live_connection' == $key){
+                      $args=$this->get_api_args();
+                    }elseif('check_test_connection' == $key){
+                      $args=$this->get_api_args('test');
+                    }
+                ?>
+                <?php if(empty($args['apikey'])): ?>
+                    <?php echo $this->empty_apikey_notice(); ?>
+                <?php else: ?>
+                    <a href="<?php echo c9wep_get_enther_price_url($args); ?>" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
+                <?php endif;//end empty() ?>
+
+                <?php if(false): ?>
+                    <a href="#" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
+                <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php echo wp_kses_post( $data['title'] ); ?></button>
+                <?php endif;//end false ?>
+                <?php echo $this->get_description_html( $data ); ?>
+              </fieldset>
+            </td>
+          </tr>
+          <?php
+          return ob_get_clean();
         }
 
         private function apply_markup( $price ) {
@@ -137,44 +499,16 @@ function c9wep_init_gateway_class() {
           return round( $price * $multiplier, 5, PHP_ROUND_HALF_UP );
         }
 
-        public function get_eth_amount() {
-          require_once C9WEP_DIR . '/includes/currencyconvertor.php';
-          $total    = WC()->cart->total;
-          $currency = get_woocommerce_currency();
-          try {
-            $convertor = new CurrencyConvertor( $currency, 'ETH' );
-            $eth_value = $convertor->convert( $total );
-            $eth_value = $this->apply_markup( $eth_value );
-            // Set the value in the session so we can log it against the order.
-            WC()->session->set(
-              'c9wep_calculated_value',
-              array(
-                'eth_value' => $eth_value,
-                'timestamp' => time(),
-              )
-            );
-
-            return $eth_value;
-          } catch ( \Exception $e ) {
-            $GLOBALS['c9wep_etherumpay_value']->log(
-              sprintf(
-                __( 'Problem performing currency conversion: %s', 'c9wep_etherumpay_value' ),
-                $e->getMessage()
-              )
-            );
-            echo '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">';
-            echo '<ul class="woocommerce-error">';
-            echo '<li>';
-            _e(
-              'Unable to provide an order value in ETH at this time. Please contact support.',
-              'c9wep_etherumpay_value'
-            );
-            echo '</li>';
-            echo '</ul>';
-            echo '</div>';
-          }
-          return false;
+        public function is_test_mode() {
+            return 'yes' === $this->get_option( 'testmode' );
         }
+
+        public function get_eth_amount() {
+            $total    = WC()->cart->total;
+            $eth_value = c9wep_convert_to_eth_amount($total);
+            return $eth_value;
+        }
+
         /**
          * You will need it if you want your custom credit card form, Step 4 is about it
          */
@@ -184,13 +518,13 @@ function c9wep_init_gateway_class() {
             if ( $this->description ) {
                 // you can instructions for test mode, I mean test card numbers etc.
                 if ( $this->testmode ) {
-                    if($this->simulator_mode){
-                    $this->description .= '<br/> <b style="color:red;">THIS IS SIMULATOR MODE</b> <br/>There are no data will be sent to any etherum net';
+                    // if($this->simulator_mode){
+                    // $this->description .= '<br/> <b style="color:red;">THIS IS SIMULATOR MODE</b> <br/>There are no data will be sent to any etherum net';
+                    // $this->description  = trim( $this->description );
+                    // }else{
+                    $this->description .= '<br/> <b style="color:red;">THIS IS TEST MODE</b>';
                     $this->description  = trim( $this->description );
-                    }else{
-                    $this->description .= '<br/> <b style="color:red;">TEST MODE ENABLED.</b>';
-                    $this->description  = trim( $this->description );
-                    }
+                    // }
 
                 }
                 // display the description with <p> tags etc.
@@ -204,226 +538,21 @@ function c9wep_init_gateway_class() {
               </span></div>
               <input type="hidden" name="eth-amount" id="eth-amount" class="form-control" value="<?php echo $this->get_eth_amount(); ?>" required="required" pattern="" title="">
             </div>
+            <?php if(false): ?>
             <div class="eth-wallet-address-wapper">
               <div class="eth-wallet-address-title"><span>
                 <?php echo 'To:' . $this->wallet_address; ?>
               </span></div>
               <input type="hidden" name="eth-wallet-address" id="eth-wallet-address" class="form-control" value="<?php echo $this->wallet_address; ?>" required="required" pattern="" title="">
             </div>
+            <?php endif;//end false ?>
             <?php
-        }
- 
-        /*
-         * Custom CSS and JS, in most cases required only when you decided to go with a custom credit card form
-         */
-        public function payment_scripts() {
-         
-            // we need JavaScript to process a token only on cart/checkout pages, right?
-            if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) ) {
-                return;
-            }
-         
-            // if our payment gateway is disabled, we do not have to enqueue JS too
-            if ( 'no' === $this->enabled ) {
-                return;
-            }
-         
-            // no reason to enqueue JavaScript if API keys are not set
-            if ( empty( $this->wallet_address ) || empty( $this->api_key ) ) {
-                return;
-            }
-         
-            // do not work with card detailes without SSL unless your website is in a test mode
-            if ( ! $this->testmode && ! is_ssl() ) {
-                return;
-            }
-         
-            // let's suppose it is our payment processor JavaScript that allows to obtain a token
-            wp_enqueue_script( 'c9wep_js', 'https://www.c9weppayments.com/api/token.js' );
-         
-            // and this is our custom JS in your plugin directory that works with token.js
-            wp_register_script( 'woocommerce_c9wep', plugins_url( 'c9wep.js', __FILE__ ), array( 'jquery', 'c9wep_js' ) );
-         
-            // in most payment processors you have to use PUBLIC KEY to obtain a token
-            wp_localize_script( 'woocommerce_c9wep', 'c9wep_params', array(
-                'publishableKey' => $this->api_key
-            ) );
-         
-            wp_enqueue_script( 'woocommerce_c9wep' );
-         
-        }
- 
-        /*
-         * Fields validation, more in Step 5
-         */
-        public function validate_fields(){
-         
-            if( empty( $_POST[ 'billing_first_name' ]) ) {
-                wc_add_notice(  'First name is required!', 'error' );
-                return false;
-            }
-            return true;
-         
         }
 
         function receipt_page($order_id) {         
             // echo $this -> generate_payment_request_form($order_id);
         }
         
-        public function generate_payment_request_form($order_id) {  
-            $order = new WC_Order($order_id);
-            $args=[
-                'MERCHANT_ACC_NO'=>$this->MERCHANT_ACC_NO,
-                'MERCHANT_TRANID'=>$order_id/*order id*/,
-                'AMOUNT'=>number_format($order->get_total(), 2, '.', ''),
-                'TRANSACTION_TYPE'=>2,//2  Sales
-                'RESPONSE_TYPE'=>'HTTP', //HTTP  Response via HTTP redirection. If this option is used, the parameter RETURN_URL must be specified.
-                'RETURN_URL'=>$this->get_callback_url(),
-                'TXN_DESC'=>$this->TXN_DESC
-            ];
-
-            /*signature fields 
-            $args=[
-              'AMOUNT'=>'30.00',
-              'MERCHANT_ACC_NO'=>'000000000000001',
-              'MERCHANT_TRANID'=>'20160225_142142',
-              'RESPONSE_TYPE'=>'HTTP',
-              'RETURN_URL'=>'https://localhost:9088/BPG/txn_office/merchant_return_page.jsp',
-              'TRANSACTION_TYPE'=>'3',
-              'TXN_DESC'=>'Order from Merchant Test Store',
-            ];
-            */
-            $args['SECURE_SIGNATURE']=c9wep_ethereumpay_secure_signature($args, $this->password);
-
-            $args['post_url']=$this->get_payment_request_endpoint();
-            $args['CUSTOMER_ID']=$order->get_customer_id();//bug of payment API, CUSTOMER_ID is optional in request body, but it's Mandatory in response body of API
-            $args['PYMT_IND']=$this->PYMT_IND;
-            $args['PYMT_CRITERIA']=$this->PYMT_CRITERIA;
-            if($this->simulator_mode){
-                $args['simulator_mode']='yes';//allow we check the post data on post form page
-                $args['password']=$this->password;//c9wep_ethereumpay_get_simulator_password();//$sm_args['Password'];//test password in API document
-            }
-
-            foreach ($args as $field => $val) {
-                $_GET[$field]=$val;
-            }
-            require WPAB_DIR . '/ethereumpay/post-form.php';
-        }
- 
-        /*
-         * We're processing the payments here, everything about it is in Step 5
-         */
-        public function get_payment_request_endpoint() {  
-            if($this->simulator_mode){
-                return c9wep_get_ethereumpay_simulator_url();
-            }
-            return $this->bank_url;
-        }
-        
-        function check_payment_response() {
-            $authorised = false;            
-            $sha512 = "";
-            
-            $txnSecureHash = array_key_exists("SECURE_SIGNATURE", $_REQUEST ) ? $_REQUEST["SECURE_SIGNATURE"] : "";
-            
-            $order_id = (int) $_REQUEST['MERCHANT_TRANID'];
-            $order = new WC_Order($order_id);
-            
-            // $DR = $this->parseDigitalReceipt();
-            //$ThreeDSecureData = $this->parse3DSecureData();
-            
-            /* Make sure user entered Transaction Success message otherwise use the default one */
-            if( trim( $this->success_message ) == "" || $this->success_message == null ) {
-                $this->success_message = "Thank you for shopping with us. Your account has been charged and your transaction is successful. We will be shipping your order to you soon.";
-            }
-            
-            /* Make sure user entered Transaction Faild message otherwise use the default one */
-            if( trim( $this->failed_message ) == "" || $this->failed_message == null ) {
-                $this->failed_message = "Thank you for shopping with us. However, the transaction has been declined.";
-            }
-            
-            $msg = array();         
-            $msg['class']   = 'error';
-            $msg['message'] = $this->failed_message;
-            
-            if ( $_REQUEST['RESPONSE_CODE'] == "0") {
-                $signature_fields=c9wep_ethereumpay_response_signature_fields();
-                $signature_args=[];
-                foreach ($signature_fields as $field) {
-                    $signature_args[$field]=$_REQUEST[$field];
-                }
-                $sha512=c9wep_ethereumpay_secure_signature($signature_args, $this->password);
-
-                // ob_start();
-                // print_r($signature_args);
-                // echo PHP_EOL;
-                // print_r($_REQUEST);
-                // echo PHP_EOL;
-                // print_r($sha512);
-                // echo PHP_EOL;
-                // echo PHP_EOL;
-                // echo PHP_EOL;
-                // echo PHP_EOL;
-                // $data1=ob_get_clean();
-                // file_put_contents(dirname(__FILE__)  . '/sha512.log',$data1,FILE_APPEND);
-                if ( strtoupper( $txnSecureHash ) != strtoupper( $sha512 ) ) {
-                    $authorised = false;
-                } else {                    
-                    if( $_REQUEST['RESPONSE_CODE'] == "0" ) {                                   
-                        $authorised = true;
-                    } else {
-                        $authorised = false;
-                    }
-                }
-            
-            } else {
-                $authorised = false;
-            }
-            
-            if( $authorised ) {
-                try {                   
-                    if( $order -> status !== 'completed' ) {                        
-                        $msg['message'] = $this->success_message;
-                        $msg['class'] = 'success';
-                        if( $order -> status != 'processing' ) {
-                            $order -> payment_complete();
-                            $order -> add_order_note('Payment successful<br/>Receipt Number: '.$_REQUEST["TRANSACTION_ID"]);
-                            WC()->cart->empty_cart();
-                        }
-                    }
-                } catch( Exception $e ) {
-                    $msg['class'] = 'error';
-                    $msg['message'] = $this->failed_message;
-                
-                    $order -> update_status('failed');
-                    $order -> add_order_note('Payment Transaction Failed');
-                    //$order -> add_order_note($this->msg['message']);
-                }
-            } else {
-                $msg['class'] = 'error';
-                $msg['message'] = $this->failed_message;
-                
-                $order -> update_status('failed');
-                $order -> add_order_note('Payment Transaction Failed');
-                //$order -> add_order_note($this->msg['message']);
-            }
-        
-            if ( function_exists( 'wc_add_notice' ) ) {
-                wc_add_notice( $msg['message'], $msg['class'] );
-            }
-            else {
-                if($msg['class']=='success') {
-                    WC()->add_message( $msg['message']);
-                }else {
-                    WC()->add_error( $msg['message'] );
-                }
-                WC()->set_messages();
-            }
-        
-            wp_redirect( $order->get_checkout_order_received_url() );
-            exit;       
-        }
-
         /*
          * We're processing the payments here, everything about it is in Step 5
          */
@@ -433,6 +562,34 @@ function c9wep_init_gateway_class() {
             // return array('result' => 'success', 'redirect' => c9wep_get_ethereumpay_post_form_url($args));
             return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
         }
+
+        function process_ether_payment($order_id) {           
+            global $woocommerce;
+            $order = new WC_Order($order_id);  
+
+            $order->payment_complete();
+            if(function_exists('wc_reduce_stock_levels')){
+              wc_reduce_stock_levels($order_id);
+            }else{
+              $order->reduce_order_stock();
+            }
+ 
+            // some notes to customer (replace true with false to make it private)
+            $order->add_order_note( 'Hey, your order is paid! Thank you!', true );
+ 
+            // Empty cart
+            $woocommerce->cart->empty_cart();
+ 
+            // Redirect to the thank you page
+            return array(
+                'result' => 'success',
+                'redirect' => $this->get_return_url( $order )
+            );
+            //we don't redirect default recipt page, we direct to post form page
+            // return array('result' => 'success', 'redirect' => c9wep_get_ethereumpay_post_form_url($args));
+            // return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
+        }
+
         public function process_payment_b0( $order_id ) {
          
             global $woocommerce;
@@ -490,16 +647,5 @@ function c9wep_init_gateway_class() {
          
         }
  
-        /*
-         * In case you need a webhook, like PayPal IPN etc
-         */
-        public function webhook() {
-         
-            $order = wc_get_order( $_GET['id'] );
-            $order->payment_complete();
-            $order->reduce_order_stock();
-         
-            update_option('webhook_debug', $_GET);
-        }
     }
 }

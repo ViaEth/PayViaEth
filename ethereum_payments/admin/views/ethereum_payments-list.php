@@ -2,7 +2,7 @@
     <?php 
         $list_table = new C9wep_Ethereum_payments_List();
     ?>
-    <h2><?php _e( 'Ethereum Payments', 'c9wep' ); ?></a></h2>
+    <h2><?php _e( 'Ethereum Payments', 'c9wep' ); ?></h2>
     <?php if (array_key_exists('error', $_GET)): ?>
         <div class="notice notice-error"><p><?php echo $_GET['error']; ?></p></div>
     <?php endif; ?>

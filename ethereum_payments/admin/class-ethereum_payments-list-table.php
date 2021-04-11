@@ -53,14 +53,41 @@ class C9wep_Ethereum_payments_List extends \WP_List_Table {
             case 'transaction_id':
                 return $item->transaction_id;
 
+            case 'transaction_status':
+                return $item->transaction_status;
+
+            case 'transaction_hash':
+                return $item->transaction_hash;
+
+            case 'blockHash':
+                return $item->blockHash;
+
+            case 'from_address':
+                return $item->from_address;
+
+            case 'my_address':
+                return $item->my_address;
+
             case 'created_at':
                 return $item->created_at;
 
             case 'updated_at':
                 return $item->updated_at;
 
+            case 'transaction_init':
+                return $item->transaction_init;
+
+            case 'transaction_confirm':
+                return $item->transaction_confirm;
+
             case 'order_id':
                 return $item->order_id;
+
+            case 'confirmations':
+                return $item->confirmations;
+
+            case 'blockNumber':
+                return $item->blockNumber;
 
             case 'order_total':
                 return $item->order_total;
@@ -70,6 +97,9 @@ class C9wep_Ethereum_payments_List extends \WP_List_Table {
 
             case 'amount':
                 return $item->amount;
+
+            case 'eth_amount':
+                return $item->eth_amount;
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -83,16 +113,28 @@ class C9wep_Ethereum_payments_List extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-//            'id'      => __( 'ID', '{ns}' ),
-            'payment_status'      => __( 'Payment Status', '{ns}' ),
-            'store_currency'      => __( 'Store Currency', '{ns}' ),
-            'transaction_id'      => __( 'Transaction ID', '{ns}' ),
-//            'created_at'      => __( 'Created At', '{ns}' ),
-//            'updated_at'      => __( 'Updated At', '{ns}' ),
-            'order_id'      => __( 'Order ID', '{ns}' ),
-            'order_total'      => __( 'Order Total', '{ns}' ),
-            'exchange_rate'      => __( 'Exchange Rate', '{ns}' ),
-            'amount'      => __( 'Amount', '{ns}' ),
+//            'id'      => __( 'ID', 'c9wep' ),
+            'order_id'      => __( 'Order', 'c9wep' ),
+            'payment_mode'      => __( 'Mode', 'c9wep' ),
+            'payment_status'      => __( 'Payment Status', 'c9wep' ),
+            // 'store_currency'      => __( 'Store Currency', 'c9wep' ),
+            // 'transaction_id'      => __( 'Transaction ID', 'c9wep' ),
+            'transaction_status'      => __( 'Transaction Status', 'c9wep' ),
+            'transaction_hash'      => __( 'Transaction Hash', 'c9wep' ),
+            // 'blockHash'      => __( 'Block Hash', 'c9wep' ),
+            'from_address'      => __( 'From Address', 'c9wep' ),
+            'my_address'      => __( 'My Address', 'c9wep' ),
+//            'created_at'      => __( 'Created At', 'c9wep' ),
+//            'updated_at'      => __( 'Updated At', 'c9wep' ),
+            // 'transaction_init'      => __( 'Transaction Init', 'c9wep' ),
+            // 'transaction_confirm'      => __( 'Transaction Confirm', 'c9wep' ),
+            'confirmations'      => __( 'Confirmations', 'c9wep' ),
+            'blockNumber'      => __( 'Block Number', 'c9wep' ),
+            'order_total'      => __( 'Order Total', 'c9wep' ),
+            // 'exchange_rate'      => __( 'Exchange Rate', 'c9wep' ),
+            // 'amount'      => __( 'Amount', 'c9wep' ),
+            'eth_amount'      => __( 'Eth Amount', 'c9wep' ),
+            'refer'      => __( 'Refer', 'c9wep' ),
         );
 
         return $columns;
@@ -112,6 +154,53 @@ class C9wep_Ethereum_payments_List extends \WP_List_Table {
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=c9wep-ethereum_payments&action=delete&id=' . $item->id ), $item->id, __( 'Delete this item', 'c9wep' ), __( 'Delete', 'c9wep' ) );
 
         return sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=c9wep-ethereum_payments&action=view&id=' . $item->id ), $item->id, $this->row_actions( $actions ) );
+    }
+
+
+    function column_payment_mode( $item ) {
+        if('test'==$item->payment_mode){
+            return '<span style="color:red;">' . $item->payment_mode . '</span>';
+        }
+        return $item->payment_mode;
+    }
+
+    function column_payment_status( $item ) {
+        if('failed'==$item->payment_status || 'expired'==$item->payment_status){
+            return '<span style="color:red;">' . $item->payment_status .  '</span>';
+        }
+        return $item->payment_status;
+    }
+
+    function column_transaction_status( $item ) {
+        if('failed'==$item->transaction_status){
+            return '<span style="color:red;">' . $item->transaction_status . '</span>';
+        }
+        return $item->transaction_status;
+    }
+
+    function column_transaction_hash( $item ) {
+        return c9wep_get_transaction_view_link($item->transaction_network,$item->transaction_hash);//$item->transaction_network . 'tx/'. $item->transaction_hash;
+        // return sprintf( '<a href="%s" target="_blank">%s</a>', $tx_url, $item->transaction_hash);
+    }
+
+    function column_from_address( $item ) {
+        return c9wep_get_wallet_address_transaction_view_link($item->transaction_network, $item->from_address);
+        // $tx_url=$item->transaction_network . 'address/'. $item->from_address;
+        // return sprintf( '<a href="%s" target="_blank">%s</a>', $tx_url, $item->from_address);
+    }
+
+    function column_my_address( $item ) {
+        return c9wep_get_wallet_address_transaction_view_link($item->transaction_network, $item->my_address);
+        // $tx_url=$item->transaction_network . 'address/'. $item->my_address;
+        // return sprintf( '<a href="%s" target="_blank">%s</a>', $tx_url, $item->my_address);
+    }
+
+    function column_order_total( $item ) {
+        return $item->store_currency . $item->order_total;
+    }
+
+    function column_order_id( $item ) {
+        return sprintf( '<a target="_blank" href="%s">%s</a>', admin_url( 'post.php?action=edit&post=' . $item->order_id ), __( '#' . $item->order_id, 'c9wep' ) );
     }
 
     function column_name( $item ) {

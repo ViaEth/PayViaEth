@@ -3,7 +3,7 @@
 Plugin Name: Cms90 Woocommerce Ethereum Payment 
 Plugin URI:  
 Description: Cms90 Woocommerce Ethereum Payment
-Version:     0.5
+Version:     1.1
 Author:      Xufeng Wang
 Author URI:  http://www.upwork.com/fl/albertw6
 License:     GPL2
@@ -22,10 +22,20 @@ add_action( 'plugins_loaded', 'c9wep_load_plugin_textdomain' );
 
 require_once C9WEP_DIR . '/php-errors-log.php'; //uncomments to turn on php errors log
 require_once C9WEP_DIR . '/functions.php';
+// require_once C9WEP_DIR . '/woo-functions.php';
+require_once C9WEP_DIR . '/etherscan-api/etherscan-functions.php';
+require_once C9WEP_DIR . '/admin/ajax/ft_check_transaction_status/ft_check_transaction_status.php'; 
+
+// require_once C9WEP_DIR . '/admin/ajax/update_transaction_status/update_transaction_status.php'; 
+// require_once C9WEP_DIR . '/admin/ajax/frontend_check_transaction_status/frontend_check_transaction_status.php'; 
+
 require_once C9WEP_DIR . '/cms90-woocommerce-ethereum-payment-gateway.php';
 require_once C9WEP_DIR . '/includes/form-fields.php';
 require_once C9WEP_DIR . '/includes/db-functions.php';
 require_once C9WEP_DIR . '/ethereum_payments/ethereum_payments-init.php';
+require_once C9WEP_DIR . '/ethereumpay/ethereumpay-init.php';
+
+require_once C9WEP_DIR . '/check_transaction_status-cronjob.php';
 
 // require_once C9WEP_DIR .'/frontend.php';
 // require_once C9WEP_DIR . '/tests/tests.php';
@@ -39,7 +49,7 @@ if ( is_admin() ) {
 
 register_deactivation_hook(__FILE__, 'c9wep_deactivation');
 function c9wep_deactivation() {
-    // wp_clear_scheduled_hook('c9wep_check_shipping_date_and_update_renew_date_cron_hook');
+    wp_clear_scheduled_hook('c9wep_check_transaction_status_cron_hook');
 }
 
 register_activation_hook(__FILE__, 'c9wep_activation');

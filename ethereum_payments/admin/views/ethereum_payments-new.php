@@ -2,7 +2,7 @@
 $item=new stdClass();
 $item->id=0;
 
-$fields=array('payment_status','store_currency','transaction_id','created_at','updated_at','order_id','order_total','exchange_rate','amount');
+$fields=array('payment_status','store_currency','transaction_id','transaction_status','transaction_hash','blockHash','from_address','my_address','created_at','updated_at','transaction_init','transaction_confirm','order_id','confirmations','blockNumber','order_total','exchange_rate','amount','eth_amount');
 
 foreach ($fields as $field) {
     if(isset($_GET[$field])){
