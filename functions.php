@@ -115,7 +115,7 @@ function c9wep_check_transaction_status($order_id, $order_status='pending') {
   //if it's expired
   $metas=c9wep_get_order_metas($order_id);
   $expired_time=$metas[PAYMENT_EXPIRED_TIME];
-  $expired_time_with_offset=strtotime($expired_time) + 60*2;//offset 5 minutes
+  $expired_time_with_offset=strtotime($expired_time);
   $current_time=current_time( 'timestamp' );
   if($current_time>$expired_time_with_offset){//the order is expired definitely
     //set order as failed or expired
@@ -333,6 +333,20 @@ add_action('init', 'override_wc_clear_cart_after_payment');
 //   // );
 // }
 
+function c9wep_handle_order_redirect($order_id, $no_redirect_status='pending'){
+  global $woocommerce;
+  $order=wc_get_order($order_id);
+  $status=$order->get_status();
+  
+  if($status != $no_redirect_status){
+    // Empty cart
+    $woocommerce->cart->empty_cart();
+    $redirect_url = $order->get_view_order_url();
+    wp_redirect( $redirect_url );
+    exit;
+  }
+}
+
 function c9wep_get_transaction_with_params($transactions_arr, $wei_amount, $wallet_address, $created_timestamp, $expired_timestamp){
 
   $wallet_address=strtolower($wallet_address);
@@ -540,6 +554,14 @@ function c9wep_get_payment_expired_time($order_id){
   }
 
   return $expired_time;
+}
+
+function c9wep_get_order_status($order_id){
+  $order=wc_get_order($order_id);
+  //check order status
+  $order_status=$order->get_status();
+
+  return $order_status;
 }
 
 function c9wep_is_payment_expired($order_id){

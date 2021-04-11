@@ -6,15 +6,7 @@ function c9wep_ft_check_transaction_status_ajax_admin_fun(){
     try {
         $order_id=$_POST['order_id'];
         $status=c9wep_check_transaction_status($order_id);
-        // $data=$status;
-        // ob_start();
-        // print_r($status);
-        // echo PHP_EOL;
-        // echo PHP_EOL;
-        // echo PHP_EOL;
-        // echo PHP_EOL;
-        // $data1=ob_get_clean();
-        // file_put_contents(dirname(__FILE__)  . '/status.log',$data1,FILE_APPEND);
+
         if(empty($status) || 'pending'==$status){
             $msg="No Transaction Found";
         }else{

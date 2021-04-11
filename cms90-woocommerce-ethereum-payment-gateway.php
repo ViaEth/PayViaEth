@@ -196,7 +196,7 @@ function c9wep_init_gateway_class() {
                 // ),
                 'test_apikey' => array(
                     'title'       => 'Etherscan API Key(test mode)',
-                    'type'        => 'text',
+                    'type'        => 'password',
                     'description' => $this->get_api_description(),
                 ),
                 'test_network' => array(

@@ -1,28 +1,41 @@
 <?php 
 $interval=c9wep_get_checking_interval_by_order_id($order_id);
+$order_status=c9wep_get_order_status($order_id);
 ?>
 <div class="row transaction-status-row-wrapper">
     <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 transaction-status-col-wrapper">
         <div class="transaction-status-inner">
-          <?php if(false): ?>
-            Status: <span id="tr-status"> N/A </span>
-            <br/>
-          <?php endif;//end false ?>
-            <a href="javascript:void(0);" id="refresh-status" data-order_id="<?php echo $order_id; ?>" class="button button-default btn btn-primary">Check Status</a><span id="check-countdown"></span><br/>
-            <div id="status-result"></div>
+            Order Status: <span id="tr-status"><?php echo $order_status; ?> </span>
+            <a href="javascript:void(0);" id="refresh-status" data-order_id="<?php echo $order_id; ?>" class="button button-default btn btn-primary">Refresh</a><span id="check-countdown"></span><span id="status-result"></span><br/>
+            <span class="bookmark-notice">Press <b>Ctrl + D</b> to Bookmark this page</span>
         </div> <!-- transaction-status-inner -->
     </div> <!-- transaction-status-col-wrapper-->
 </div> <!-- row transaction-status-row-wrapper-->
 
 <style>
-  .transaction-status-inner{
+  .bookmark-notice{
+    font-size: 70%;
+    font-style: italic;
+  }
 
+  .transaction-status-inner{
+    margin: 10px 0;
   } /*.transaction-status-inner*/
-  #refresh-status{
+
+  #tr-status{
+    font-weight: bold;
+  }
+
+  #refresh-status {
     margin-right: 10px;
+    padding: 5px;
+    text-transform: none !important;
+    border-radius: 5px;
+    margin-left: 10px;
   }
 </style>
-
+<?php if(false): ?>
+  
 <script type="text/javascript">
   jQuery(function($){
     countdown();//init count
@@ -48,3 +61,4 @@ $interval=c9wep_get_checking_interval_by_order_id($order_id);
   });
 </script>
 
+<?php endif;//end false ?>

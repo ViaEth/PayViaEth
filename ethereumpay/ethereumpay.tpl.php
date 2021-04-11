@@ -4,6 +4,7 @@ available variable
 
 $order_id
 */
+c9wep_handle_order_redirect($order_id);//if it's not pending for payment, we redirect it
 ?>
 <?php if(false): ?>
 <script type="text/javascript" src="<?php echo C9WEP_URL . 'assets/lib/ethers-5.0.umd.min.js'; ?>" crossorigin="anonymous"></script>
@@ -28,28 +29,10 @@ $order_id
 // ETHER_MY_WALLET_ADDRESS,
 // ETHER_EXCHANGE_RATE,
 $metas=c9wep_get_order_metas($order_id);
-// ob_start();
-// print_r($metas);
-// echo PHP_EOL;
-// echo PHP_EOL;
-// echo PHP_EOL;
-// echo PHP_EOL;
-// $data1=ob_get_clean();
-// file_put_contents(dirname(__FILE__)  . '/metas.log',$data1,FILE_APPEND);
 $ether_amount=$metas[ETHER_AMOUNT];
 $is_test_mode=c9wep_get_payment_mode_by_order_id($order_id);
 $wallet_address=$metas[ETHER_MY_WALLET_ADDRESS];//c9wep_get_wallet_address_with_order_id($order_id);
 $is_payment_expired=c9wep_is_payment_expired($order_id);
-
-// $ether_amount=c9wep_get_order_amount_ether($order_id);
-// $is_test_mode=c9wep_get_payment_mode_by_order_id($order_id);
-// $wallet_address=c9wep_get_wallet_address_with_order_id($order_id);
-// $is_payment_expired=c9wep_is_payment_expired($order_id);
-// ob_start();
-// print_r($is_payment_expired);
-// echo PHP_EOL;
-// $data1=ob_get_clean();
-// file_put_contents(dirname(__FILE__)  . '/is_payment_expired.log',$data1,FILE_APPEND);
 ?>
 <div class="bst4-wrapper ethereumpay-wrapper">
     <div class="container-fluid">
@@ -105,9 +88,9 @@ $is_payment_expired=c9wep_is_payment_expired($order_id);
                   </div> <!-- ethereumpay-qrcode-inner -->
                 </div>
 
-            <?php if($is_test_mode): ?>
                 Or 
                 <button href="javascript:void(0);" id="pay-ether" class="button button-default btn btn-primary">Pay Via MetaMask</button>
+            <?php if($is_test_mode): ?>
             <?php endif;//end false ?>
               </div> <!-- ether-pay-qrcode-inner -->
 
@@ -144,8 +127,10 @@ $is_payment_expired=c9wep_is_payment_expired($order_id);
       ?>
 
       <?php 
-      include __DIR__ . '/timeleft-coutdown.tpl.php';
       include __DIR__ . '/transaction-status-panel.tpl.php';
+      //3. remove time remaining bar and check status button.
+      //Add wording "You have X minutes to pay for this order. Your order will expire at Y+X" where "Y"
+      include __DIR__ . '/order-expires-countdown.tpl.php';
       ?>
     </div>
 </div>
@@ -161,6 +146,9 @@ $is_payment_expired=c9wep_is_payment_expired($order_id);
   }
   .pd-small{
     padding: 2px 5px;
+  }
+  .ether-to-address{
+    margin-top: 2px;
   }
   .ethereumpay-inner{
 

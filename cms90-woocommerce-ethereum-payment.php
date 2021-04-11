@@ -3,7 +3,7 @@
 Plugin Name: Cms90 Woocommerce Ethereum Payment 
 Plugin URI:  
 Description: Cms90 Woocommerce Ethereum Payment
-Version:     1.1
+Version:     1.2.5
 Author:      Xufeng Wang
 Author URI:  http://www.upwork.com/fl/albertw6
 License:     GPL2
