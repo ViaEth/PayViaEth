@@ -1,13 +1,12 @@
 <?php
 /*
-Plugin Name: Cms90 Woocommerce Ethereum Payment 
-Plugin URI:  
-Description: Cms90 Woocommerce Ethereum Payment
-Version:     1.2.5
-Author:      Xufeng Wang
-Author URI:  http://www.upwork.com/fl/albertw6
-License:     GPL2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Plugin Name: PayViaEth 
+Plugin URI:  https://viaeth.io
+Description: Woocommerce Ethereum Payment Plugin
+Version:     0.2.5
+Author:      Tyler Thomas(https://www.SpaceAgeMinds.com), Xufeng Wang(http://www.upwork.com/fl/albertw6)
+License:     GPL3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Domain Path: /languages
 Text Domain: c9wep
 */
