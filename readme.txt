@@ -14,9 +14,15 @@ A Non-Custodial Ethereum Woocommerce Payment Plugin.
 
 A Non-Custodial Ethereum Woocommerce Payment Plugin.
 
+It allows a webstore to use ETH as a payment method.
+
+This plugin will allow other tokens at some point in the future.
+
+This plugin aims to be as decentralized as possible.
+
 == Frequently Asked Questions ==
 
-= Does this work for bitcoin payments? =
+= Does this plugin work for bitcoin payments? =
 
 No.
 
