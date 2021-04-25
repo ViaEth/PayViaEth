@@ -1,8 +1,8 @@
 === PayViaEth ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: viaeth
 Donate link: https://viaeth.io
 Tags: payments, ethereum, woocommerce, ecommerce, web3, blockchain
-Requires at least: 4.7
+Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.0
 License: GPLv3
@@ -26,28 +26,11 @@ This plugin aims to be as decentralized as possible.
 
 No.
 
-= Can I use this plugin on the ethereum test nets? =
+= Can I use this plugin on an ethereum test net? =
 
 Yes.
 
-== Screenshots ==
+= Can I use any other ethereum token with this plugin? =
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is stored in the /assets directory.
-2. This is the second screen shot
+Not currently but that feature is planned for some point in the future.
 
-== Changelog ==
-
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
