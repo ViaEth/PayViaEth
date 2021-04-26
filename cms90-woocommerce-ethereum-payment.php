@@ -5,7 +5,7 @@ Plugin URI:  https://viaeth.io
 Description: Woocommerce Ethereum Payment Plugin
 Version:     0.2.5
 Author:      Tyler Thomas(https://www.SpaceAgeMinds.com), Xufeng Wang(http://www.upwork.com/fl/albertw6)
-License:     GPL3
+License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Domain Path: /languages
 Text Domain: c9wep
