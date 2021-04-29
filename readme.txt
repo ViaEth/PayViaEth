@@ -1,7 +1,7 @@
 === PayViaEth ===
 Contributors: viaeth
 Donate link: https://viaeth.io
-Tags: payments, ethereum, woocommerce, ecommerce, web3, blockchain
+Tags: payviaeth, pay via eth, ethereum, woocommerce, ecommerce, web3, blockchain, e-commerce, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, paypal, storefront, stripe, woo commerce, commerce
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.0
