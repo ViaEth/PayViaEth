@@ -34,3 +34,9 @@ Yes.
 
 Not currently but that feature is planned for some point in the future.
 
+=  Where can I get help/support? =
+
+You can visit the community support page.
+
+https://viaeth.io/community/forum/support/payviaeth/
+
