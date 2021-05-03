@@ -2,9 +2,9 @@
 Contributors: viaeth
 Donate link: https://viaeth.io
 Tags: payviaeth, pay via eth, ethereum, woocommerce, ecommerce, web3, blockchain, e-commerce, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, paypal, storefront, stripe, woo commerce, commerce
-Requires at least: 5.6
+Requires at least: 5.7.1
 Tested up to: 5.7.1
-Requires PHP: 7.0
+Requires PHP: 7.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
