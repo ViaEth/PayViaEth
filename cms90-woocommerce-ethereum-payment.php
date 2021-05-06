@@ -3,7 +3,7 @@
 Plugin Name: PayViaEth 
 Plugin URI:  https://viaeth.io
 Description: Woocommerce Ethereum Payment Plugin
-Version:     0.2.5
+Version:     0.420.69
 Author:      Tyler Thomas, Xufeng Wang
 License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html

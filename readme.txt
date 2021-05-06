@@ -5,6 +5,7 @@ Tags: payviaeth, pay via eth, ethereum, woocommerce, ecommerce, web3, blockchain
 Requires at least: 5.7.1
 Tested up to: 5.7.1
 Requires PHP: 7.3
+Stable tag: 0.420.69
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
