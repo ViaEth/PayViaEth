@@ -19,7 +19,7 @@ class C9wep_Ethereum_payments {
         /** Top Menu **/
         // add_menu_page( __( 'Ethereum Payments', 'c9wep' ), __( 'Ethereum Payments', 'c9wep' ), 'manage_options', 'c9wep-ethereum_payments', array( $this, 'plugin_page' ), 'dashicons-groups', null );
 
-        add_submenu_page( 'woocommerce', __( 'Ethereum Payments', 'c9wep' ), __( 'Ethereum Payments', 'c9wep' ), 'manage_options', 'c9wep-ethereum_payments', array( $this, 'plugin_page' ) );
+        add_submenu_page( 'woocommerce', __( 'Payments via Ethereum', 'c9wep' ), __( 'Payments via Ethereum', 'c9wep' ), 'manage_options', 'c9wep-ethereum_payments', array( $this, 'plugin_page' ) );
     }
 
     /**

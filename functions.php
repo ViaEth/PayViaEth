@@ -415,6 +415,8 @@ function c9wep_get_track_id($wei_amount, $wallet_address) {
 
 add_action('woocommerce_new_order','c9wep_woocommerce_new_order',90);
 function c9wep_woocommerce_new_order($order_id) {
+  $payment=c9wep_get_payment_gateway_by_order_id($order_id);
+  if('ethereumpay' != $payment->id) return;
   //update order meta
   $ether_amount=c9wep_get_order_amount_ether($order_id);
   $is_test_mode=c9wep_get_payment_mode_by_order_id($order_id);

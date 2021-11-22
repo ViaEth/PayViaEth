@@ -3,7 +3,7 @@
 Plugin Name: PayViaEth 
 Plugin URI:  https://viaeth.io
 Description: Woocommerce Ethereum Payment Plugin
-Version:     0.420.69
+Version:     0.420.69 
 Author:      Tyler Thomas, Xufeng Wang
 License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -102,3 +102,20 @@ function c9wep_check_sys_requirments() {
   }
   return $errors;
 }
+
+function c9wep_payment_gateway_disable_total_amount( $available_gateways ) {
+    global $woocommerce;
+    if ( isset( $available_gateways['ethereumpay'] ) && $woocommerce->cart->total == 0 ) {
+        unset(  $available_gateways['ethereumpay'] );
+    }
+    ob_start();
+    print_r($available_gateways);
+    echo PHP_EOL;
+    echo PHP_EOL;
+    echo PHP_EOL;
+    echo PHP_EOL;
+    $data1=ob_get_clean();
+    file_put_contents(dirname(__FILE__)  . '/available_gateways.log',$data1,FILE_APPEND);
+    return $available_gateways;
+}
+// add_filter( 'woocommerce_available_payment_gateways', 'c9wep_payment_gateway_disable_total_amount' );

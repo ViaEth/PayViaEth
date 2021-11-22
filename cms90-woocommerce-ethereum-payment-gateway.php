@@ -24,7 +24,7 @@ function c9wep_init_gateway_class() {
             $this->id = 'ethereumpay'; // payment gateway plugin ID
             $this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
             $this->has_fields = true; // in case you need a custom credit card form
-            $this->method_title = 'Pay with Ether';
+            $this->method_title = 'Pay via Eth';
             $this->method_description = 'Description of Ethereum Payment'; // will be displayed on the options page
          
             // gateways can support subscriptions, refunds, saved payment methods,
@@ -110,7 +110,7 @@ function c9wep_init_gateway_class() {
                     'title'       => 'Title',
                     'type'        => 'text',
                     'description' => 'This controls the title which the user sees during checkout.',
-                    'default'     => 'Pay with Ether',
+                    'default'     => 'Pay via Eth',
                     'desc_tip'    => true,
                 ),
                 'description' => array(
@@ -134,7 +134,7 @@ function c9wep_init_gateway_class() {
                 //     'type'        => 'text'
                 // ),
                 'wallet_addresses' => array(
-                  'title'             => __( 'Live Wallet Addresses', 'woocommerce-integration-demo' ),
+                  'title'             => __( 'Wallet Addresses', 'woocommerce-integration-demo' ),
                   'type'              => 'ether_addresses',
                   'addresses' => $this->get_option('wallet_addresses'),
                   'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
@@ -217,27 +217,23 @@ function c9wep_init_gateway_class() {
                     'type'        => 'link',
                     'description' => 'Check Test Mode Connection to etherscan.io with above test API Key and above test network',
                 ),
-                // 'test_wallet_address' => array(
-                //     'title'       => 'Test Wallet Address',
-                //     'type'        => 'text',
+                // 'test_wallet_addresses' => array(
+                //   'title'             => __( 'Test Wallet Addresses', 'woocommerce-integration-demo' ),
+                //   'type'              => 'ether_addresses',
+                //   'addresses' => $this->get_option('test_wallet_addresses'),
+                //   'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
+                //   'sanitize_callback'=>array($this, 'sanitize_test_wallet_address'),
+                //   'desc_tip'          => true,
                 // ),
-                'test_wallet_addresses' => array(
-                  'title'             => __( 'Test Wallet Addresses', 'woocommerce-integration-demo' ),
-                  'type'              => 'ether_addresses',
-                  'addresses' => $this->get_option('test_wallet_addresses'),
-                  'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
-                  'sanitize_callback'=>array($this, 'sanitize_test_wallet_address'),
-                  'desc_tip'          => true,
-                ),
             );
         }
 
         public function get_wallet_addresses() {
-          if($this->is_test_mode()){
-            return $this->get_option('test_wallet_addresses');
-          }else{
+          // if($this->is_test_mode()){
+          //   return $this->get_option('test_wallet_addresses');
+          // }else{
             return $this->get_option('wallet_addresses');
-          }
+          // }
         }
 
         public function sanitize_c9wep_check_transaction_status_interval( $input ) {
@@ -265,21 +261,21 @@ function c9wep_init_gateway_class() {
          *
          * @return void
          */
-        public function init_form_fields_b0() {
-          $this->form_fields = array(
-            // don't forget to put your other settings here
+        // public function init_form_fields_b0() {
+        //   $this->form_fields = array(
+        //     // don't forget to put your other settings here
                 
-            'test_wallet_addresses' => array(
-              'title'             => __( 'Customize!', 'woocommerce-integration-demo' ),
-              'type'              => 'ether_addresses',
-              'custom_attributes' => array(
-                'onclick' => "location.href='http://www.woothemes.com'",
-              ),
-              'description'       => __( 'Customize your settings by going to the integration site directly.', 'woocommerce-integration-demo' ),
-              'desc_tip'          => true,
-            )
-          );
-        }
+        //     'test_wallet_addresses' => array(
+        //       'title'             => __( 'Customize!', 'woocommerce-integration-demo' ),
+        //       'type'              => 'ether_addresses',
+        //       'custom_attributes' => array(
+        //         'onclick' => "location.href='http://www.woothemes.com'",
+        //       ),
+        //       'description'       => __( 'Customize your settings by going to the integration site directly.', 'woocommerce-integration-demo' ),
+        //       'desc_tip'          => true,
+        //     )
+        //   );
+        // }
         
         public function get_ether_address_view_root_with_key( $key ) {
           if('test_wallet_addresses'==$key){
@@ -333,7 +329,9 @@ function c9wep_init_gateway_class() {
                         <tr>
                           <th class="th-no">No</th>
                           <th class="th-address">Address</th>
+                          <?php if(false): ?>
                           <th class="th-action">Action</th>
+                          <?php endif;//end false ?>
                         </tr>
                       </thead>
                       <tbody>
@@ -347,6 +345,7 @@ function c9wep_init_gateway_class() {
                               <td class="td-address">
                                  <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
                               </td>
+                              <?php if(false): ?>
                               <td class="td-action">
                                 <?php 
                                   $network=$this->get_ether_address_view_root_with_key($key);
@@ -357,6 +356,7 @@ function c9wep_init_gateway_class() {
                                  <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
                                 <?php endif;//end false ?>
                               </td>
+                              <?php endif;//end false ?>
                             </tr>
                         <?php
                         endfor;
