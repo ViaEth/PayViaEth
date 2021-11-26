@@ -119,16 +119,6 @@ function c9wep_init_gateway_class() {
                     'description' => 'This controls the description which the user sees during checkout.',
                     'default'     => 'Pay with ether.',
                 ),
-                'apikey' => array(
-                    'title'       => 'Etherscan API Key(live mode)',
-                    'type'        => 'password',
-                    'description' => $this->get_api_description(),
-                ),
-                'check_live_connection' => array(
-                    'title'       => 'Check Live Connection',
-                    'type'        => 'link',
-                    'description' => 'Check Live Connection to etherscan.io with above live API Key',
-                ),
                 // 'wallet_address' => array(
                 //     'title'       => 'Live Wallet Address',
                 //     'type'        => 'text'
@@ -140,6 +130,37 @@ function c9wep_init_gateway_class() {
                   'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
                   'sanitize_callback'=>array($this, 'sanitize_wallet_address'),//'sanitize_wallet_address',
                   'desc_tip'          => true,
+                ),
+                'testmode' => array(
+                    'title'       => 'Test mode',
+                    'label'       => 'Enable Test Mode',
+                    'type'        => 'checkbox',
+                    'description' => 'Place the payment gateway in test mode using test API keys.',
+                    'default'     => 'yes',
+                    'desc_tip'    => true,
+                ),
+                'test_network' => array(
+                    'title'       => 'Test Network',
+                    'type'        => 'select',
+                    'options'=>c9wep_get_test_networks(),
+                    // [
+                    //     'kovan'=>'Kovan Testnet',
+                    //     'ropsten'=>'Ropsten Testnet',
+                    //     'rinkeby'=>'Rinkeby Testnet',
+                    //     'goerli'=>'Goerli Testnet',
+                    // ],
+                    'default'     => 'kovan',
+                    'description' => 'Please make sure set your test wallet address to the same network with above setting',
+                ),
+                'apikey' => array(
+                    'title'       => 'Etherscan API Key',
+                    'type'        => 'password',
+                    'description' => $this->get_api_description(),
+                ),
+                'check_connection' => array(
+                    'title'       => 'Check Connection',
+                    'type'        => 'link',
+                    'description' => 'Check Connection to etherscan.io with above API Key',
                 ),
                 'total_time_transaction_timeout' => array(
                     'title'       => 'Total transaction lifetime timeout',
@@ -179,14 +200,6 @@ function c9wep_init_gateway_class() {
                     'default'     => 5,
                     'description' => 'If the browser was closed accidently when customer try to make a payment, we use this cronjob to scan the ethereum network for the order which is not expired on payment',
                 ),
-                'testmode' => array(
-                    'title'       => 'Test mode',
-                    'label'       => 'Enable Test Mode',
-                    'type'        => 'checkbox',
-                    'description' => 'Place the payment gateway in test mode using test API keys.',
-                    'default'     => 'yes',
-                    'desc_tip'    => true,
-                ),
                 // 'simulator_mode' => array(
                 //         'title'   => __( 'Test With Simulator', 'woocommerce' ),
                 //         'type'    => 'checkbox',
@@ -194,29 +207,21 @@ function c9wep_init_gateway_class() {
                 //         'description' => 'Enable this option to allow you test payment workflow without sending data to actually wallet address(only work in test mode)',
                 //         'default' => 'no'
                 // ),
-                'test_apikey' => array(
-                    'title'       => 'Etherscan API Key(test mode)',
-                    'type'        => 'password',
-                    'description' => $this->get_api_description(),
-                ),
-                'test_network' => array(
-                    'title'       => 'Test Network',
-                    'type'        => 'select',
-                    'options'=>c9wep_get_test_networks(),
-                    // [
-                    //     'kovan'=>'Kovan Testnet',
-                    //     'ropsten'=>'Ropsten Testnet',
-                    //     'rinkeby'=>'Rinkeby Testnet',
-                    //     'goerli'=>'Goerli Testnet',
-                    // ],
-                    'default'     => 'kovan',
-                    'description' => 'Please make sure set your test wallet address to the same network with above setting',
-                ),
-                'check_test_connection' => array(
-                    'title'       => 'Check Test Mode Connection',
-                    'type'        => 'link',
-                    'description' => 'Check Test Mode Connection to etherscan.io with above test API Key and above test network',
-                ),
+                // 'test_apikey' => array(
+                //     'title'       => 'Etherscan API Key(test mode)',
+                //     'type'        => 'password',
+                //     'description' => $this->get_api_description(),
+                // ),
+                // 'check_live_connection' => array(
+                //     'title'       => 'Check Live Connection',
+                //     'type'        => 'link',
+                //     'description' => 'Check Live Connection to etherscan.io with above live API Key',
+                // ),
+                // 'check_test_connection' => array(
+                //     'title'       => 'Check Test Mode Connection',
+                //     'type'        => 'link',
+                //     'description' => 'Check Test Mode Connection to etherscan.io with above test API Key and above test network',
+                // ),
                 // 'test_wallet_addresses' => array(
                 //   'title'             => __( 'Test Wallet Addresses', 'woocommerce-integration-demo' ),
                 //   'type'              => 'ether_addresses',
@@ -278,9 +283,9 @@ function c9wep_init_gateway_class() {
         // }
         
         public function get_ether_address_view_root_with_key( $key ) {
-          if('test_wallet_addresses'==$key){
+          if($this->is_test_mode()){
             $network=$this->get_option( 'test_network' );
-          }else if('wallet_addresses'==$key){
+          }else{
             $network='main';
           }
 
@@ -329,9 +334,7 @@ function c9wep_init_gateway_class() {
                         <tr>
                           <th class="th-no">No</th>
                           <th class="th-address">Address</th>
-                          <?php if(false): ?>
                           <th class="th-action">Action</th>
-                          <?php endif;//end false ?>
                         </tr>
                       </thead>
                       <tbody>
@@ -345,10 +348,9 @@ function c9wep_init_gateway_class() {
                               <td class="td-address">
                                  <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
                               </td>
-                              <?php if(false): ?>
                               <td class="td-action">
                                 <?php 
-                                  $network=$this->get_ether_address_view_root_with_key($key);
+                                  $network=$this->get_ether_network();//$this->get_ether_address_view_root_with_key($key);
                                   $link=c9wep_get_wallet_address_transaction_view_link($network,$data['addresses'][$i], 'view');
                                   echo $link;
                                 ?>
@@ -356,7 +358,6 @@ function c9wep_init_gateway_class() {
                                  <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
                                 <?php endif;//end false ?>
                               </td>
-                              <?php endif;//end false ?>
                             </tr>
                         <?php
                         endfor;
@@ -423,7 +424,8 @@ function c9wep_init_gateway_class() {
           if($this->is_test_mode()){
               $args=[
                   'endpoint'=>$this->get_option( 'test_network' ),
-                  'apikey'=>$this->get_option( 'test_apikey' ),
+                  // 'apikey'=>$this->get_option( 'test_apikey' ),
+                  'apikey'=>$this->get_option( 'apikey' ),
               ];
           }else{
               $args=[
@@ -467,11 +469,12 @@ function c9wep_init_gateway_class() {
               <fieldset>
                 <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
                 <?php 
-                    if('check_live_connection' == $key){
+                    // if('check_live_connection' == $key){
+                    //   $args=$this->get_api_args();
+                    // }elseif('check_test_connection' == $key){
+                    //   $args=$this->get_api_args('test');
+                    // }
                       $args=$this->get_api_args();
-                    }elseif('check_test_connection' == $key){
-                      $args=$this->get_api_args('test');
-                    }
                 ?>
                 <?php if(empty($args['apikey'])): ?>
                     <?php echo $this->empty_apikey_notice(); ?>
