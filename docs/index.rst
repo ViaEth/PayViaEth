@@ -10,7 +10,7 @@ Welcome to Pay.Via.Eth's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-README
+.. include:: ../README.rst
 
 Indices and tables
 ==================
