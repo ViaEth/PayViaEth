@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Pay.Via.Eth'
-copyright = '2023, T. Thomas'
+copyright = '2023, MeaningfulBits.io'
 author = 'T. Thomas'
 release = '2022/04/01'
 
@@ -26,3 +26,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+html_theme_options = {
+    'logo': 'logo.png',
+    'github_user': 'viaeth',
+    'github_repo': 'PayViaEth',
+}
+

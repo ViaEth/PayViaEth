@@ -1,10 +1,9 @@
-payviaeth
-========
 
-A Non-Custodial Ethereum Woocommerce Payment Plugin.
 
 Introduction
 ------------
+A Non-Custodial Ethereum Woocommerce Payment Plugin.
+
 
 `payviaeth` is a WordPress plugin that allows a webstore to use ETH as a payment method. It aims to be as decentralized as possible and is designed to support other tokens in the future.
 
