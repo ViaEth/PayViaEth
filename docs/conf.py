@@ -25,7 +25,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'alabaster'
 html_static_path = ['_static']
 html_theme_options = {
-    'logo': 'logo.png',
+    'description': 'Ethereum Payments on Wordpress',
     'github_user': 'viaeth',
     'github_repo': 'PayViaEth',
 }
