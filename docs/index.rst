@@ -5,6 +5,10 @@
 
 💰Pay.Via.Eth Documentation💱
 =======================================
+.. important::
+
+    This plugin is currently in "Alpha", use at your own risk.
+
 .. include:: 
    ../README.rst
 
