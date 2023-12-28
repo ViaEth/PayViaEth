@@ -5,12 +5,15 @@
 
 💰Pay.Via.Eth Documentation💱
 =======================================
+.. include:: 
+   ../README.rst
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
 
-.. include:: ../README.rst
+    index.rst
+    usage/install.rst
+    usage/uninstall.rst
 
 Indices and tables
 ==================
