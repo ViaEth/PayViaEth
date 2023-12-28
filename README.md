@@ -41,3 +41,12 @@ You can visit the community support page.
 
 https://viaeth.io/community/forum/support/payviaeth/
 
+Documentation
+-------------
+
+Documentation for the `payviaeth` plugin is available in the `docs/` directory of the plugin repository. The documentation is written in reStructuredText and can be generated into HTML or PDF format using Sphinx.
+
+Contributing
+------------
+
+Contributions to `payviaeth` are always welcome! If you have a bug report or feature request, please open an issue on the GitHub repository. If you'd like to contribute code or documentation, please open a pull request.

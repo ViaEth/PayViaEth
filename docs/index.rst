@@ -6,7 +6,7 @@
 💰Pay.Via.Eth Documentation💱
 =======================================
 .. include:: 
-   ../README.rst
+   ../README.md
 
 .. toctree::
     :maxdepth: 2
