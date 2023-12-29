@@ -1,4 +1,6 @@
-=== PayViaEth ===
+PayViaEth
+**********
+
 Contributors: viaeth
 Donate link: https://viaeth.io
 Tags: payviaeth, pay via eth, ethereum, woocommerce, ecommerce, web3, blockchain, e-commerce, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, paypal, storefront, stripe, woo commerce, commerce
@@ -11,7 +13,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 A Non-Custodial Ethereum Woocommerce Payment Plugin.
 
-== Description ==
+Description
+------------
 
 A Non-Custodial Ethereum Woocommerce Payment Plugin.
 
@@ -21,7 +24,8 @@ This plugin will allow other tokens at some point in the future.
 
 This plugin aims to be as decentralized as possible.
 
-== Frequently Asked Questions ==
+Frequently Asked Questions
+---------------------------
 
 = Does this plugin work for bitcoin payments? =
 
@@ -36,6 +40,9 @@ Yes.
 Not currently but that feature is planned for some point in the future.
 
 =  Where can I get help/support? =
+
+Community
+----------
 
 You can visit the community support page.
 
