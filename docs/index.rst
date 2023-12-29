@@ -16,4 +16,6 @@
     :maxdepth: 2
     
     usage/quickstart.rst
+    usage/settings.rst
+    usage/security.rst
     other/unsorted.rst
