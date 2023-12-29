@@ -1,9 +1,9 @@
 PayViaEth
-**********
+---------
 
 Contributors: viaeth
 Donate link: https://viaeth.io
-Tags: payviaeth, pay via eth, ethereum, woocommerce, ecommerce, web3, blockchain, e-commerce, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, paypal, storefront, stripe, woo commerce, commerce
+Tags: ethereum, woocommerce, ecommerce, blockchain, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, storefront
 Requires at least: 5.7.1
 Tested up to: 5.7.1
 Requires PHP: 7.3
@@ -16,13 +16,13 @@ A Non-Custodial Ethereum Woocommerce Payment Plugin.
 Description
 ------------
 
-A Non-Custodial Ethereum Woocommerce Payment Plugin.
-
-It allows a webstore to use ETH as a payment method.
+This plugin allows a webstore to use ETH as a payment method.
 
 This plugin will allow other tokens at some point in the future.
 
 This plugin aims to be as decentralized as possible.
+
+You are solely responsible for your funds.
 
 Frequently Asked Questions
 ---------------------------
@@ -42,7 +42,7 @@ Not currently but that feature is planned for some point in the future.
 =  Where can I get help/support? =
 
 Community
-----------
+---------
 
 You can visit the community support page.
 
@@ -57,3 +57,11 @@ Contributing
 ------------
 
 Contributions to `payviaeth` are always welcome! If you have a bug report or feature request, please open an issue on the GitHub repository. If you'd like to contribute code or documentation, please open a pull request.
+
+Requirements
+------------
+
+* WordPress 5.7.1 or later
+* WooCommerce plugin
+* PHP 7.3 or later
+* Ethereum wallet or compatible service
