@@ -14,7 +14,6 @@
 
 .. toctree::
     :maxdepth: 2
-
-    usage/install.rst
-    usage/uninstall.rst
-
+    
+    usage/quickstart.rst
+    other/unsorted.rst
