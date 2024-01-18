@@ -53,6 +53,8 @@ Documentation
 
 Documentation for the `payviaeth` plugin is available in the `docs/` directory of the plugin repository. The documentation is written in reStructuredText and can be generated into HTML or PDF format using Sphinx.
 
+This plugin has the option to work with Etherscan's API. You can read the Etherscan API documentation here: https://docs.etherscan.io/
+
 Contributing
 ------------
 
