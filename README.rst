@@ -53,6 +53,21 @@ Documentation
 
 Documentation for the `payviaeth` plugin is available in the `docs/` directory of the plugin repository. The documentation is written in reStructuredText and can be generated into HTML or PDF format using Sphinx.
 
+3rd Party APIs
+--------------
+
+This plugin has the option to use the Etherscan API, A 3rd party service.
+
+You can find more info about the services and apis offered by etherscan here: https://etherscan.io/apis
+
+You can read the Etherscan API documentation here: https://docs.etherscan.io/
+
+You can read the Etherscan terms of service here: https://etherscan.io/terms
+
+You can read the Etherscan Privacy Policy here: https://etherscan.io/privacyPolicy
+
+Please review this info on your own, This plugin works without this API service but requires users to manually check transactions.
+
 Contributing
 ------------
 
