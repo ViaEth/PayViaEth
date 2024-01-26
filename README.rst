@@ -1,11 +1,9 @@
-PayViaEth
----------
-
+=== PayViaEth ===
 Contributors: viaeth
-Donate link: https://viaeth.io
-Tags: ethereum, woocommerce, ecommerce, blockchain, store, sales, sell, woo, shop, cart, checkout, downloadable, downloads, payments, storefront
-Requires at least: 5.7.1
-Tested up to: 5.7.1
+Donate link: https://Pay.ViaEth.io
+Tags: ethereum, woocommerce, blockchain, payments
+Requires at least: 6.4.2
+Tested up to: 6.4.2
 Requires PHP: 7.3
 Stable tag: 0.420.69
 License: GPLv3
