@@ -1,4 +1,6 @@
-=== PayViaEth ===
+PayViaEth
+---------
+
 Contributors: viaeth
 Donate link: https://Pay.ViaEth.io
 Tags: ethereum, woocommerce, blockchain, payments
