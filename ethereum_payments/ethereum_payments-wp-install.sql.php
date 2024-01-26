@@ -6,6 +6,9 @@ if( is_admin() ) {
     //c9wep_db_import_predefine_ethereum_payments();
 }
 
+//Start db_install
+//This code creates PayViaEth database tables.
+//CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci; (Recomended by WordPress)
 function c9wep_db_install_ethereum_payments_table()
 {
     define('C9WEP_ETHEREUM_PAYMENTS_DB_VERSION', '1.9');
@@ -45,13 +48,14 @@ CREATE TABLE `{$wp_prefix}c9wep_ethereum_payments` (
      `exchange_rate` decimal(12,2) NOT NULL default 0.0,
      `amount` decimal(12,2) NOT NULL default 0.0,
      `eth_amount` decimal(27,18) NOT NULL default 0.0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;");
         
         // Create/update the plugin tables.
         dbDelta($create_ethereum_payments_table);
         update_option('c9wep_ethereum_payments_db_version', C9WEP_ETHEREUM_PAYMENTS_DB_VERSION);
     }
 }
+//End db_install
 
 function c9wep_db_install_ethereum_payments_table_dummy_data_import()
 {
