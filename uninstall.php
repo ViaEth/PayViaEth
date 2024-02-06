@@ -6,9 +6,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // remove plugin options
-//$option_name = 'pve_option';
-
-//delete_option( $option_name );
+$option_name = 'woocommerce_ethereumpay_settings';
+delete_option( $option_name );
 
 // remove plugin transients
 
