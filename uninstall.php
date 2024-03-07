@@ -6,8 +6,10 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // remove plugin options
-$option_name = 'woocommerce_ethereumpay_settings';
-delete_option( $option_name );
+$wp_wc_pve_options = array('woocommerce_ethereumpay_settings', 'c9wep_ethereum_payments_db_version');
+foreach ( $wp_wc_pve_options as $option ) {
+	delete_option( $option );
+}
 
 // remove plugin transients
 
