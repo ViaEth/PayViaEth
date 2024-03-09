@@ -1,11 +1,10 @@
 <?php
+
 //https://developer.wordpress.org/plugins/the-basics/uninstall-methods/
 // if uninstall.php is not called by WordPress, die
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     die;
 }
-
-wp_wc_pve_write_log('PayViaEth Uninstall Started', E_USER_NOTICE);
 
 // remove plugin options
 $wp_wc_pve_options = array('woocommerce_ethereumpay_settings', 'c9wep_ethereum_payments_db_version');
@@ -16,6 +15,8 @@ foreach ( $wp_wc_pve_options as $option ) {
 // remove plugin transients
 
 // remove plugin cron events
+
+// remove plugin logs
 
 // ..etc., based on what needs to be removed
 
