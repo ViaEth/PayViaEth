@@ -1,5 +1,5 @@
 PayViaEth
----------
+=========
 
 Contributors: viaeth
 Donate link: https://Pay.ViaEth.io
@@ -11,10 +11,10 @@ Stable tag: 0.420.69
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A Non-Custodial Ethereum Woocommerce Payment Plugin.
-
 Description
 ------------
+
+A Non-Custodial Ethereum & WooCommerce Payment Plugin.
 
 This plugin allows a webstore to use ETH as a payment method.
 
@@ -22,7 +22,15 @@ This plugin will allow other tokens at some point in the future.
 
 This plugin aims to be as decentralized as possible.
 
-You are solely responsible for your funds.
+You are solely responsible for your funds and the funds of your customers.
+
+Requirements
+------------
+
+* WordPress 5.7.1 or later
+* WooCommerce 8.5.1 or later 
+* PHP 7.3 or later
+* Ethereum wallet or compatible service
 
 Frequently Asked Questions
 ---------------------------
@@ -41,8 +49,9 @@ Not currently but that feature is planned for some point in the future.
 
 =  Where can I get help/support? =
 
-Community
----------
+You can find addition information about the plugin on the project website.
+
+https://Pay.ViaEth.io
 
 You can visit the community support page.
 
@@ -73,10 +82,3 @@ Contributing
 
 Contributions to `payviaeth` are always welcome! If you have a bug report or feature request, please open an issue on the GitHub repository. If you'd like to contribute code or documentation, please open a pull request.
 
-Requirements
-------------
-
-* WordPress 5.7.1 or later
-* WooCommerce plugin
-* PHP 7.3 or later
-* Ethereum wallet or compatible service
