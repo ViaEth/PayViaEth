@@ -24,7 +24,7 @@ function c9wep_load_plugin_textdomain() {
 add_action( 'plugins_loaded', 'c9wep_load_plugin_textdomain' );
 
 // Load required files and classes for the plugin
-require_once C9WEP_DIR . '/php-errors-log.php'; //uncomments to turn on php errors log
+require_once C9WEP_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging
 require_once C9WEP_DIR . '/functions.php'; // Load main plugin functions
 require_once C9WEP_DIR . '/etherscan-api/etherscan-functions.php'; // Load etherscan API functions
 require_once C9WEP_DIR . '/admin/ajax/ft_check_transaction_status/ft_check_transaction_status.php'; // Load transaction status check AJAX function
