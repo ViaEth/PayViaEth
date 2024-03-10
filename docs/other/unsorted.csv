@@ -1,5 +1,5 @@
 Date (Added/Updated),Info
-2023/01/06,"The added database table is called 'wp_c9wep_ethereum_payments' and it is set up as a different collation table type, this might be causing issues for while saving settings or displaying it on the front end"
-2023/01/06,"Information, Specifically API keys and addresses aren't deleted when the plugin is uninstalled. This information is stored in the wordpress settings section of the database. you can find it by adding an address or api key via the settings menu."
-2023/01/06,System Requirements in README.rst need to be tested and updated.
+2024/03/09,Logging is done in three places. Wordpress Logging is saved in debug.log / WooCommerce Logging is saved in ‘wp-content/uploads/wc-logs’ | PayViaEth Logs are saved in ‘wp-content/uploads/wc-logs'
+2024/01/06,"The relevant database table is called 'wp_c9wep_ethereum_payments' and I was set up as a different collation table type, this might be causing issues while saving settings or displaying it on the front end. There is also a database version which might not be needed"
+2024/01/06,System Requirements in README.rst need to be tested and updated.
 2023/12/28,Pay.Via.Eth use libraries to generate qr codes.
