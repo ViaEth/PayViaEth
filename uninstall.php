@@ -5,8 +5,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     die;
 }
 
-wp_wc_pve_write_log('PayViaEth Uninstall Started', E_USER_NOTICE);
-
 // remove plugin options
 $wp_wc_pve_options = array('woocommerce_ethereumpay_settings', 'c9wep_ethereum_payments_db_version');
 foreach ( $wp_wc_pve_options as $option ) {

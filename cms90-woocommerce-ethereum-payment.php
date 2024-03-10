@@ -58,12 +58,16 @@ register_deactivation_hook(__FILE__, 'c9wep_deactivation');
 function c9wep_deactivation() {
     // Clear any scheduled cron jobs for checking transaction status
     wp_clear_scheduled_hook('c9wep_check_transaction_status_cron_hook');
+   //Logs that the plugin has been deactivated.
+   wp_wc_pve_write_log('PayViaEth Plugin Deactivated', E_USER_NOTICE);
 }
 
 // Register activation hook for this plugin file and call c9wep_activation function.
 register_activation_hook(__FILE__, 'c9wep_activation');
 // Function called on plugin activation.
 function c9wep_activation() {
+    //Logs that the plugin has been activated.
+    wp_wc_pve_write_log('PayViaEth Plugin Activated', E_USER_NOTICE);
 }
 
 // Adds a settings link to the plugin action links on the WordPress plugin page
