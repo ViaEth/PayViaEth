@@ -15,6 +15,8 @@ foreach ( $wp_wc_pve_options as $option ) {
 
 // remove plugin cron events
 
+// remove plugin logs
+
 // ..etc., based on what needs to be removed
 
 // drop plugin specific database tables
