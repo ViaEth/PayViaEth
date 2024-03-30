@@ -346,17 +346,42 @@ function c9wep_init_gateway_class() {
                                   <?php echo '#' . $i; ?>
                               </td>
                               <td class="td-address">
-                                 <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
+				 <input 
+                                    type="text" 
+                                    name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" 
+                                    id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" 
+                                    style="<?php echo esc_attr( $data['css'] ); ?>" 
+				    value="<?php
+                                           //Check if $data['addresses'] is an array before accessing it.
+                                           if (is_array($data['addresses'])) {
+                                              //If it's an array, use array_key_exists for safety
+                                              if (array_key_exists($i, $data['addresses'])) {
+                                                 echo $data['addresses'][$i];
+                                              } else {//Key doesn't exisit = empty
+                                                 echo '';
+                                              }
+                                           } else {//Not an array = empty
+                                                   echo '';
+                                           }
+                                           ?>"
+                                 >
                               </td>
                               <td class="td-action">
-                                <?php 
-                                  $network=$this->get_ether_network();//$this->get_ether_address_view_root_with_key($key);
-                                  $link=c9wep_get_wallet_address_transaction_view_link($network,$data['addresses'][$i], 'view');
-                                  echo $link;
-                                ?>
-                                <?php if(false): ?>
-                                 <input type="text" name="<?php echo esc_attr( $field ); ?>[<?php echo $i; ?>]" id="<?php echo esc_attr( $field ); ?>_<?php echo $i; ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $data['addresses'][$i]; ?>"> 
-                                <?php endif;//end false ?>
+                              <?php
+                                 //Fetches the network for use in the address url
+                                 $network = $this->get_ether_network();
+
+                                 //Check if $data['addresses'] is an array before accessing it
+                                 if (is_array($data['addresses'])) {
+                                    // If it's an array, use array_key_exists for safety
+                                    if (array_key_exists($i, $data['addresses'])) {
+                                       $link = c9wep_get_wallet_address_transaction_view_link($network, $data['addresses'][$i], 'view');
+                                       echo $link;
+                                    }
+                                 } else { //Handle the case where $data['addresses'] is not an array (empty content)
+                                    echo '';
+                                 }
+                              ?>
                               </td>
                             </tr>
                         <?php
