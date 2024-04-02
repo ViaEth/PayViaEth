@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
@@ -7,6 +8,7 @@ function c9wep_add_gateway_class( $gateways ) {
     $gateways[] = 'Cms90_Woocommerce_Ethereum_Payment_Gateway'; // your class name is here
     return $gateways;
 }
+
 /*
  * The class itself, please note that it is inside plugins_loaded action hook
  */
@@ -62,7 +64,7 @@ function c9wep_init_gateway_class() {
             //     //$this->password=c9wep_ethereumpay_get_simulator_password();
             // }
 
-        	$this->icon = C9WEP_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
+            $this->icon = C9WEP_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
 
             // $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
             // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));  
@@ -76,16 +78,11 @@ function c9wep_init_gateway_class() {
             //add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) ); 
             // You can also register a webhook here
             // add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) );
-         }
- 
-        public function get_callback_url(){
-            // return c9wep_get_callback_url($this->id);
         }
 
-        public function get_callback_url_b0(){
-            // return c9wep_get_callback_url($this->id);
-        }
-
+        /**
+     * Descriptions, used on settings page.
+     */
         public function get_api_description(){
             return 'You can get apikey from <a href="https://etherscan.io/myapikey" target="_blank">https://etherscan.io/myapikey</a>, the same apikey can be used for both test and live mode if you want,<br/>for a <b>free API plan</b>, there is a limitation on number of API call(<b>5 calls per second</b>), so, if you use a <b>free API plan</b> in a high traffic site, most of API call may failed since the limitation of API plan';
         }
@@ -93,8 +90,9 @@ function c9wep_init_gateway_class() {
         public function get_wallet_addresses_description(){
             return 'When a customer make a transaction by scanning QR Code, the combination of ether amount and one of above wallet address is the only way that we can use to track the transaction from ethereum network, in short, if two customers pay the same ether amount to the same wallet address, we have no idea who paid the order, to avoid such kind of potential collision, as many as wallet addresses will be a reasonable solution';
         }
+
         /**
-         * Plugin options, we deal with it in Step 3 too
+         * Plugin options.
          */
         public function init_form_fields(){
          
@@ -260,28 +258,8 @@ function c9wep_init_gateway_class() {
 
         public function get_interval_check_status(){
           return $this->get_option( 'interval_to_check_transaction_status' );
-        }
-        /**
-         * Initialize integration settings form fields.
-         *
-         * @return void
-         */
-        // public function init_form_fields_b0() {
-        //   $this->form_fields = array(
-        //     // don't forget to put your other settings here
-                
-        //     'test_wallet_addresses' => array(
-        //       'title'             => __( 'Customize!', 'woocommerce-integration-demo' ),
-        //       'type'              => 'ether_addresses',
-        //       'custom_attributes' => array(
-        //         'onclick' => "location.href='http://www.woothemes.com'",
-        //       ),
-        //       'description'       => __( 'Customize your settings by going to the integration site directly.', 'woocommerce-integration-demo' ),
-        //       'desc_tip'          => true,
-        //     )
-        //   );
-        // }
-        
+	}
+
         public function get_ether_address_view_root_with_key( $key ) {
           if($this->is_test_mode()){
             $network=$this->get_option( 'test_network' );
@@ -291,7 +269,7 @@ function c9wep_init_gateway_class() {
 
           return $network;//c9wep_get_transaction_networks($network);
         }
-        
+
         public function get_form_field_with_key( $key ) {
           $field    = $this->plugin_id . $this->id . '_' . $key;
           return $field;
@@ -461,6 +439,7 @@ function c9wep_init_gateway_class() {
 
           return $args;
         }
+
         /**
          * Generate Button HTML.
          *
@@ -577,10 +556,6 @@ function c9wep_init_gateway_class() {
             <?php
         }
 
-        function receipt_page($order_id) {         
-            // echo $this -> generate_payment_request_form($order_id);
-        }
-        
         /*
          * We're processing the payments here, everything about it is in Step 5
          */
@@ -674,6 +649,6 @@ function c9wep_init_gateway_class() {
             }
          
         }
- 
+
     }
 }

@@ -13,15 +13,15 @@ Text Domain: c9wep
 
 // Define constant for the plugin directory URL
 define('C9WEP_URL', plugin_dir_url( __FILE__ ));
+
 // Define constant for the plugin directory path
 define('C9WEP_DIR', dirname( __FILE__ ));
 
-// Loads the plugin's text domain
+// Adds an action to load the plugin's text domain when plugins are loaded.
+add_action( 'plugins_loaded', 'c9wep_load_plugin_textdomain' );
 function c9wep_load_plugin_textdomain() {
     load_plugin_textdomain( 'c9wep', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
-// Adds an action to load the plugin's text domain when plugins are loaded
-add_action( 'plugins_loaded', 'c9wep_load_plugin_textdomain' );
 
 // Load required files and classes for the plugin
 require_once C9WEP_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging
@@ -46,23 +46,10 @@ require_once C9WEP_DIR . '/check_transaction_status-cronjob.php'; // Load cron j
 // If the user is not in the admin area, it does not load anything.
 // The commented out line includes the c9wep-install.php file, but it is currently not being used
 if ( is_admin() ) {
-    // require_once C9WEP_DIR . '/c9wep-install.php';
     require_once C9WEP_DIR .'/admin/admin.php';
-}else{
-  
 }
 
-// Register the 'c9wep_deactivation' function to be called upon deactivation of the plugin
-register_deactivation_hook(__FILE__, 'c9wep_deactivation');
-// Function to be called upon deactivation of the plugin
-function c9wep_deactivation() {
-    // Clear any scheduled cron jobs for checking transaction status
-    wp_clear_scheduled_hook('c9wep_check_transaction_status_cron_hook');
-   //Logs that the plugin has been deactivated.
-   wp_wc_pve_write_log('PayViaEth Plugin Deactivated', E_USER_NOTICE);
-}
-
-// Register activation hook for this plugin file and call c9wep_activation function.
+// Register activation hook for this plugin to be called upon activation.
 register_activation_hook(__FILE__, 'c9wep_activation');
 // Function called on plugin activation.
 function c9wep_activation() {
@@ -70,7 +57,19 @@ function c9wep_activation() {
     wp_wc_pve_write_log('PayViaEth Plugin Activated', E_USER_NOTICE);
 }
 
+// Register deactivation hook for this plugin to be called upon deactivation.
+register_deactivation_hook(__FILE__, 'c9wep_deactivation');
+// Function called on plugin deactivation.
+function c9wep_deactivation() {
+    // Clear any scheduled cron jobs for checking transaction status
+    wp_clear_scheduled_hook('c9wep_check_transaction_status_cron_hook');
+   //Logs that the plugin has been deactivated.
+   wp_wc_pve_write_log('PayViaEth Plugin Deactivated', E_USER_NOTICE);
+}
+
 // Adds a settings link to the plugin action links on the WordPress plugin page
+// Add the settings link filter to the plugin action links for this plugin
+add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'c9wep_plugin_add_settings_link' );
 function c9wep_plugin_add_settings_link( $links ) {
     // Set the URL for the settings page
     $url=admin_url('admin.php?page=wc-settings&tab=checkout&section=ethereumpay');
@@ -81,10 +80,10 @@ function c9wep_plugin_add_settings_link( $links ) {
     // Return the modified $links array
     return $links;
 }
-// Add the settings link filter to the plugin action links for this plugin
-add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'c9wep_plugin_add_settings_link' );
 
 // Define a function to check system requirements for the plugin
+// Add the error notice function to the admin notices hook
+add_action( 'admin_notices', 'c9wep_my_error_notice' );
 function c9wep_my_error_notice() {
   // Call the c9wep_check_sys_requirments function to get any errors
   $errors=c9wep_check_sys_requirments();
@@ -100,8 +99,6 @@ function c9wep_my_error_notice() {
     <?php
   }
 }
-// Add the error notice function to the admin notices hook
-add_action( 'admin_notices', 'c9wep_my_error_notice' );
 
 // Function to check system requirements for the plugin
 function c9wep_check_sys_requirments() {
@@ -147,5 +144,6 @@ function c9wep_payment_gateway_disable_total_amount( $available_gateways ) {
     // Return the modified list of available gateways.
     return $available_gateways;
 }
+
 // Uncomment the following line to apply the filter to the 'woocommerce_available_payment_gateways' hook.
 // add_filter( 'woocommerce_available_payment_gateways', 'c9wep_payment_gateway_disable_total_amount' );
