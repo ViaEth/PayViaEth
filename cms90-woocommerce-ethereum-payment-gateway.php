@@ -26,8 +26,8 @@ function c9wep_init_gateway_class() {
             $this->id = 'ethereumpay'; // payment gateway plugin ID
             $this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
             $this->has_fields = true; // in case you need a custom credit card form
-            $this->method_title = 'Pay via Eth';
-            $this->method_description = 'Description of Ethereum Payment'; // will be displayed on the options page
+            $this->method_title = 'Pay Via Eth';
+            $this->method_description = 'Ethereum Payments for Wordpress/WooCommerce'; // will be displayed on the options page
          
             // gateways can support subscriptions, refunds, saved payment methods,
             // but in this tutorial we begin with simple payments
@@ -67,11 +67,15 @@ function c9wep_init_gateway_class() {
             $this->icon = C9WEP_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
 
             // $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
-            // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));  
-	    
+            // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));
+
             // This action hook saves the settings
-            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-         
+            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, function()
+                       {
+                           $this->process_admin_options();
+                           wp_wc_pve_write_log('Plugin Settings Saved', E_USER_NOTICE);
+                       });
+
             add_action('woocommerce_receipt_' . $this->id, array($this, 'receipt_page'));   
             // We need custom JavaScript to obtain a token
             // add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
@@ -398,13 +402,6 @@ function c9wep_init_gateway_class() {
                         width: 100% !important;
                     }
                 </style>
-                <?php if(false): ?>
-              <fieldset>
-                <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-                <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php echo wp_kses_post( $data['title'] ); ?></button>
-                <?php echo $this->get_description_html( $data ); ?>
-              </fieldset>
-                <?php endif;//end false ?>
             </td>
           </tr>
           <?php
@@ -485,11 +482,6 @@ function c9wep_init_gateway_class() {
                 <?php else: ?>
                     <a href="<?php echo c9wep_get_enther_price_url($args); ?>" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
                 <?php endif;//end empty() ?>
-
-                <?php if(false): ?>
-                    <a href="#" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
-                <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php echo wp_kses_post( $data['title'] ); ?></button>
-                <?php endif;//end false ?>
                 <?php echo $this->get_description_html( $data ); ?>
               </fieldset>
             </td>
@@ -545,14 +537,6 @@ function c9wep_init_gateway_class() {
               </span></div>
               <input type="hidden" name="eth-amount" id="eth-amount" class="form-control" value="<?php echo $this->get_eth_amount(); ?>" required="required" pattern="" title="">
             </div>
-            <?php if(false): ?>
-            <div class="eth-wallet-address-wapper">
-              <div class="eth-wallet-address-title"><span>
-                <?php echo 'To:' . $this->wallet_address; ?>
-              </span></div>
-              <input type="hidden" name="eth-wallet-address" id="eth-wallet-address" class="form-control" value="<?php echo $this->wallet_address; ?>" required="required" pattern="" title="">
-            </div>
-            <?php endif;//end false ?>
             <?php
         }
 
