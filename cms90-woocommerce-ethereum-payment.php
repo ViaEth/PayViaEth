@@ -4,6 +4,7 @@ Plugin Name: PayViaEth
 Plugin URI:  https://viaeth.io
 Description: Woocommerce Ethereum Payment Plugin
 Version:     0.420.69 
+Requires Plugins: woocommerce
 Author:      Tyler Thomas, Xufeng Wang
 License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -63,8 +64,8 @@ register_deactivation_hook(__FILE__, 'c9wep_deactivation');
 function c9wep_deactivation() {
     // Clear any scheduled cron jobs for checking transaction status
     wp_clear_scheduled_hook('c9wep_check_transaction_status_cron_hook');
-   //Logs that the plugin has been deactivated.
-   wp_wc_pve_write_log('Plugin Deactivated', E_USER_NOTICE);
+    //Logs that the plugin has been deactivated.
+    wp_wc_pve_write_log('Plugin Deactivated', E_USER_NOTICE);
 }
 
 // Adds a settings link to the plugin action links on the WordPress plugin page
@@ -79,51 +80,6 @@ function c9wep_plugin_add_settings_link( $links ) {
     array_unshift($links, $settings_link);
     // Return the modified $links array
     return $links;
-}
-
-// Define a function to check system requirements for the plugin
-// Add the error notice function to the admin notices hook
-add_action( 'admin_notices', 'c9wep_my_error_notice' );
-function c9wep_my_error_notice() {
-  // Call the c9wep_check_sys_requirments function to get any errors
-  $errors=c9wep_check_sys_requirments();
-  // If there are errors, display an error notice
-  if(!empty($errors)){
-    ?>
-    <div class="error notice" style="background-color:#dc3232;color:#fff;">
-      <p><?php _e('<b>Cms90 Woocommerce Ethereum Payment</b> Need following plugins', 'c9wep' ); ?></p>
-      <?php foreach ($errors as $key => $err): ?>
-        <p style="background-color:orange;"><?php _e($err, 'c9wep' ); ?></p>
-      <?php endforeach ?>
-    </div>
-    <?php
-  }
-}
-
-// Function to check system requirements for the plugin
-function c9wep_check_sys_requirments() {
-  // Includes the WordPress plugin.php file
-  include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-  // Initializes an empty array to store errors
-  $errors=[];
-  // If in admin area, checks for required plugins and adds errors if they are not active
-  if ( is_admin() ) {
-    $required_plugins=[
-      'WooCommerce'=>'woocommerce/woocommerce.php',
-    ];
-
-    foreach ($required_plugins as $plugin_name => $plugin_file) {
-      if(!is_plugin_active( $plugin_file )){
-        $errors[$plugin_name]=$plugin_name . ' plugin is required to install and activate';
-      }
-    }
-
-    // if(!class_exists('WFOCU_Gateway')){
-    //   $errors['WFOCU_Gateway']='WFOCU_Gateway class cannot be found, please make sure UpStroke: WooCommerce One Click Upsells is licensed';
-    // }
-  }
-  // Returns array of errors
-  return $errors;
 }
 
 // Disable the EthereumPay payment gateway if the cart total is zero.
