@@ -60,7 +60,7 @@ https://viaeth.io/community/forum/support/payviaeth/
 Documentation
 -------------
 
-Documentation for the `payviaeth` plugin is available in the `docs/` directory of the plugin repository. The documentation is written in reStructuredText and can be generated into HTML or PDF format using Sphinx.
+Documentation for the `payviaeth` plugin is available in the `docs/` directory of the plugin repository. The documentation is written in reStructuredText and can be generated into HTML format using Sphinx.
 
 3rd Party APIs
 --------------

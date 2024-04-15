@@ -1,4 +1,7 @@
 Date (Added/Updated),Info
+2024/04/15,"The current Development Version of PayViaEth doesn’t work on the newest version of wordpress. The current plan of action is to work with the documentation to see if I can get it working. There Is currently a github issue open for this https://github.com/ViaEth/PayViaEth/issues/32
+
+https://developer.woocommerce.com/docs/woocommerce-payment-gateway-api/"
 2024/03/09,Logging is done in three places. Wordpress Logging is saved in debug.log / WooCommerce Logging is saved in ‘wp-content/uploads/wc-logs’ | PayViaEth Logs are saved in ‘wp-content/uploads/wc-logs'
 2024/01/06,"The relevant database table is called 'wp_c9wep_ethereum_payments' and I was set up as a different collation table type, this might be causing issues while saving settings or displaying it on the front end. There is also a database version which might not be needed"
 2024/01/06,System Requirements in README.rst need to be tested and updated.
