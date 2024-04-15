@@ -55,7 +55,8 @@ register_activation_hook(__FILE__, 'c9wep_activation');
 // Function called on plugin activation.
 function c9wep_activation() {
     //Logs that the plugin has been activated.
-    wp_wc_pve_write_log('Plugin Activated', E_USER_NOTICE);
+    $log_string = ('Plugin Activated with WooComerce Version: '.WC_VERSION);
+    wp_wc_pve_write_log($log_string, E_USER_NOTICE);
 }
 
 // Register deactivation hook for this plugin to be called upon deactivation.
