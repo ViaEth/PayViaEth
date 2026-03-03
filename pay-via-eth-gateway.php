@@ -4,26 +4,26 @@
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
 add_filter( 'woocommerce_payment_gateways', 'c9wep_add_gateway_class' );
-function c9wep_add_gateway_class( $gateways ) {
-    $gateways[] = 'Cms90_Woocommerce_Ethereum_Payment_Gateway'; // your class name is here
+function pve_add_gateway_class( $gateways ) {
+    $gateways[] = 'PVE_Woocommerce_Ethereum_Payment_Gateway'; // your class name is here
     return $gateways;
 }
 
 /*
  * The class itself, please note that it is inside plugins_loaded action hook
  */
-add_action( 'plugins_loaded', 'c9wep_init_gateway_class' );
-function c9wep_init_gateway_class() {
+add_action( 'plugins_loaded', 'pve_init_gateway_class' );
+function pve_init_gateway_class() {
     if( !class_exists('WC_Payment_Gateway') )  return;
 
-    class Cms90_Woocommerce_Ethereum_Payment_Gateway extends WC_Payment_Gateway {
+    class PVE_Woocommerce_Ethereum_Payment_Gateway extends WC_Payment_Gateway {
  
         /**
          * Class constructor, more about it in Step 3
          */
         public function __construct() {
          
-            $this->id = 'ethereumpay'; // payment gateway plugin ID
+            $this->id = 'Payments Via Ethereum'; // payment gateway plugin ID
             $this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
             $this->has_fields = true; // in case you need a custom credit card form
             $this->method_title = 'Pay Via Eth';
@@ -64,7 +64,7 @@ function c9wep_init_gateway_class() {
             //     //$this->password=c9wep_ethereumpay_get_simulator_password();
             // }
 
-            $this->icon = C9WEP_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
+            $this->icon = PVE_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
 
             // $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
             // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));
@@ -189,16 +189,16 @@ function c9wep_init_gateway_class() {
                     'default'     => 15,
                     'description' => 'The interval that we scan the etherscan.io to get the transaction status by retrieving a transaction list with our wallet address, the default value is every 15 seconds since the time of a bock creation on ethereum network may take 13 seconds, so, there is no need to set a short period time than that',
                 ),
-                'c9wep_check_transaction_status_interval' => array(
+                'pve_check_transaction_status_interval' => array(
                     'title'       => 'The inverval to check transaction status(cronjob)',
                     'type'        => 'select',
                     'options'=>[
-                      '3_minutes'=>__('3 Minutes','c9wep'),
-                      '5_minutes'=>__('5 Minutes','c9wep'),
-                      '8_minutes'=>__('8 Minutes','c9wep'),
-                      '10_minutes'=>__('10 Minutes','c9wep'),
+                      '3_minutes'=>__('3 Minutes','pve'),
+                      '5_minutes'=>__('5 Minutes','pve'),
+                      '8_minutes'=>__('8 Minutes','pve'),
+                      '10_minutes'=>__('10 Minutes','pve'),
                     ],
-                    'sanitize_callback'=>array($this, 'sanitize_c9wep_check_transaction_status_interval'),
+                    'sanitize_callback'=>array($this, 'sanitize_pve_check_transaction_status_interval'),
                     'default'     => 5,
                     'description' => 'If the browser was closed accidently when customer try to make a payment, we use this cronjob to scan the ethereum network for the order which is not expired on payment',
                 ),
@@ -243,8 +243,8 @@ function c9wep_init_gateway_class() {
           // }
         }
 
-        public function sanitize_c9wep_check_transaction_status_interval( $input ) {
-            c9wep_setup_check_transaction_status_cron_job('c9wep_check_transaction_status_cron_hook', $input);
+        public function sanitize_pve_check_transaction_status_interval( $input ) {
+            pve_setup_check_transaction_status_cron_job('pve_check_transaction_status_cron_hook', $input);
             return $input; 
         }
 
@@ -271,7 +271,7 @@ function c9wep_init_gateway_class() {
             $network='main';
           }
 
-          return $network;//c9wep_get_transaction_networks($network);
+          return $network;//pve_get_transaction_networks($network);
         }
 
         public function get_form_field_with_key( $key ) {
@@ -357,7 +357,7 @@ function c9wep_init_gateway_class() {
                                  if (is_array($data['addresses'])) {
                                     // If it's an array, use array_key_exists for safety
                                     if (array_key_exists($i, $data['addresses'])) {
-                                       $link = c9wep_get_wallet_address_transaction_view_link($network, $data['addresses'][$i], 'view');
+                                       $link = pve_get_wallet_address_transaction_view_link($network, $data['addresses'][$i], 'view');
                                        echo $link;
                                     }
                                  } else { //Handle the case where $data['addresses'] is not an array (empty content)
@@ -480,7 +480,7 @@ function c9wep_init_gateway_class() {
                 <?php if(empty($args['apikey'])): ?>
                     <?php echo $this->empty_apikey_notice(); ?>
                 <?php else: ?>
-                    <a href="<?php echo c9wep_get_enther_price_url($args); ?>" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
+                    <a href="<?php echo pve_get_enther_price_url($args); ?>" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
                 <?php endif;//end empty() ?>
                 <?php echo $this->get_description_html( $data ); ?>
               </fieldset>
@@ -504,7 +504,7 @@ function c9wep_init_gateway_class() {
 
         public function get_eth_amount() {
             $total    = WC()->cart->total;
-            $eth_value = c9wep_convert_to_eth_amount($total);
+            $eth_value = pve_convert_to_eth_amount($total);
             return $eth_value;
         }
 
