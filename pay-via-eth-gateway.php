@@ -3,7 +3,7 @@
 /*
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
-add_filter( 'woocommerce_payment_gateways', 'c9wep_add_gateway_class' );
+add_filter( 'woocommerce_payment_gateways', 'pve_add_gateway_class' );
 function pve_add_gateway_class( $gateways ) {
     $gateways[] = 'PVE_Woocommerce_Ethereum_Payment_Gateway'; // your class name is here
     return $gateways;
@@ -144,7 +144,7 @@ function pve_init_gateway_class() {
                 'test_network' => array(
                     'title'       => 'Test Network',
                     'type'        => 'select',
-                    'options'=>c9wep_get_test_networks(),
+                    'options'=>pve_get_test_networks(),
                     // [
                     //     'kovan'=>'Kovan Testnet',
                     //     'ropsten'=>'Ropsten Testnet',

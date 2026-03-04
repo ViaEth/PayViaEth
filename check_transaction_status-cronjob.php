@@ -1,7 +1,7 @@
 <?php
 // This function adds custom cron schedules to the existing WordPress cron schedules.
 // It accepts an array of existing cron schedules and returns the same array with new custom schedules.
-function c9wep_add_check_transaction_status_cron_schedules($schedules) {
+function pve_add_check_transaction_status_cron_schedules($schedules) {
   // Adds a new custom schedule for 3 minutes interval.
   $schedules['3_minutes'] = array(
     'interval' => 60*3,
@@ -26,12 +26,12 @@ function c9wep_add_check_transaction_status_cron_schedules($schedules) {
 return $schedules;
 }
 // Adds the custom cron schedules to WordPress cron schedules.
-add_filter('cron_schedules', 'c9wep_add_check_transaction_status_cron_schedules');
+add_filter('cron_schedules', 'pve_add_check_transaction_status_cron_schedules');
 
 // This function sets up a cron job for the provided hook and schedule ID.
 // If the provided schedule ID is not valid, it sets the schedule ID to "hourly" by default.
 // If a previous cron job is already scheduled for the provided hook, it clears it.
-function c9wep_setup_check_transaction_status_cron_job($cron_hook,$schedule_id='hourly') {
+function pve_setup_check_transaction_status_cron_job($cron_hook,$schedule_id='hourly') {
     // An array of all available schedules, including custom ones.
     $all_schedules_ids=array('3_minutes','5_minutes','8_minutes','10_minutes','hourly','daily','twicedaily');
     // If the provided schedule ID is not valid, it sets the schedule ID to "hourly" by default.
@@ -48,9 +48,9 @@ function c9wep_setup_check_transaction_status_cron_job($cron_hook,$schedule_id='
 
 // This function is the actual task that is executed when the cron job is run.
 // It calls another function to update transaction status for all orders.
-function c9wep_check_transaction_status_cron_task() {
+function pve_check_transaction_status_cron_task() {
     c9wep_update_transactions_status_all_orders();
 }
 // Adds the cron job hook and the task to execute when the cron job is run.
-add_action( 'c9wep_check_transaction_status_cron_hook', 'c9wep_check_transaction_status_cron_task' );
+add_action( 'pve_check_transaction_status_cron_hook', 'pve_check_transaction_status_cron_task' );
 

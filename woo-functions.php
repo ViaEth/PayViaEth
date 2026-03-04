@@ -360,7 +360,7 @@ add_action( 'c9wep_order_details_product_form_items_list', 'c9wep_c9wep_product_
 // define the woocommerce_review_order_after_cart_contents callback
 // this function might not be used in the plugin as the add_action section was commented out.
 // This fucntion needs testing and documentation.
-function action_woocommerce_review_order_after_cart_contents_b0(  ) { 
+function pve_action_woocommerce_review_order_after_cart_contents_b0(  ) { 
   ob_start();
 
   foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
@@ -395,7 +395,7 @@ function action_woocommerce_review_order_after_cart_contents_b0(  ) {
 
 // this function might not be used in the plugin as the add_action section was commented out.
 // This fucntion needs testing and documentation.
-function c9wep_c9wep_checkout_product_row( $product_id, $xkey ) {
+function pve_checkout_product_row( $product_id, $xkey ) {
   // $field_values=c9wep_get_entry_field_values_with_product_id_and_key($product_id, $xkey);
   if(empty($field_values)) return;
   ob_start();
@@ -424,7 +424,7 @@ function c9wep_c9wep_checkout_product_row( $product_id, $xkey ) {
 
 // This function might not be used in the plugin or might be a standalone function not directly linked to woocommerce but some other peice of code.
 // This fucntion needs testing and documentation.
-function c9wep_get_page_id_with_product_id($product_id) {
+function pve_get_page_id_with_product_id($product_id) {
   $args['where']=[
     'product_id'=>$product_id
   ];
@@ -512,14 +512,14 @@ The priority of the action is set to 90.
 @param int $order_id: the ID of the order
 @return bool: false if the XKEY is empty
 */
-add_action('woocommerce_thankyou','c9wep_update_order_related_data',90);
+add_action('woocommerce_thankyou','pve_update_order_related_data',90);
 
 /**
 Updates the order-related data
 
 @param int $order_id: the ID of the order
 */
-function c9wep_update_order_related_data($order_id) {
+function pve_update_order_related_data($order_id) {
     // Get the XKEY from the order post meta
     $xkey=get_post_meta($order_id, XKEY, true);
     // If XKEY is empty, return false
@@ -571,7 +571,7 @@ The modified subtotal is returned.
 
 @return float - The new subtotal for the line item
 */
-function c9wep_hook_woocommerce_order_formatted_line_subtotal($subtotal,$item,$order)
+function pve_hook_woocommerce_order_formatted_line_subtotal($subtotal,$item,$order)
 {
     /* Get the product ID, order ID, and XKEY from order metadata. If any of them are empty, return false. */
     $product       = $item->get_product();
@@ -617,7 +617,7 @@ This function is hooked to the 'woocommerce_before_calculate_totals' action with
 
 @return void
 */
-function add_custom_price( $cart ) {
+function pve_add_custom_price( $cart ) {
 
     // This is necessary for WC 3.0+
     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
@@ -657,7 +657,7 @@ Generates a custom button to add a WooCommerce product to cart.
 
 @return void
 */
-function custom_product_button(){
+function pve_custom_product_button(){
     global $product;
     // HERE your custom button text and link
     // $button_text = __( "Custom text", "woocommerce" );
@@ -666,7 +666,7 @@ function custom_product_button(){
     // Display button
     // echo '<a class="button" href="'.$button_link.'">' . $button_text . '</a>';
     $default='';
-    echo c9wep_woocommerce_product_add_to_cart_link($default, $product);
+    echo pve_woocommerce_product_add_to_cart_link($default, $product);
 }
 
 /**
@@ -675,10 +675,10 @@ Replaces the single product button add to cart by a custom button for a specific
 @return void
 */
 add_action( 'woocommerce_single_product_summary', 'replace_single_add_to_cart_button', 1 );
-function replace_single_add_to_cart_button() {
+function pve_replace_single_add_to_cart_button() {
     global $product;
     
-    $page_id=c9wep_get_page_id_with_product_id($product->get_id());
+    $page_id=pve_get_page_id_with_product_id($product->get_id());
     if(empty($page_id)){
       return;//do nothing
     }
@@ -708,9 +708,9 @@ This function is hooked to the 'woocommerce_loop_add_to_cart_link' action with a
 @return string The updated button HTML.
 */
 add_filter( 'woocommerce_loop_add_to_cart_link', 'c9wep_woocommerce_product_add_to_cart_link',90,2 );
-function c9wep_woocommerce_product_add_to_cart_link($default, $product) {
+function pve_woocommerce_product_add_to_cart_link($default, $product) {
   // Get the page ID of the product.
-  $page_id=c9wep_get_page_id_with_product_id($product->get_id());
+  $page_id=pve_get_page_id_with_product_id($product->get_id());
 
   if(!empty($page_id)){
     // Generate button HTML with custom URL and label.
@@ -730,27 +730,27 @@ function c9wep_woocommerce_product_add_to_cart_link($default, $product) {
 }
 
 // Single Product
-function c9wep_single_add_to_cart_text($default, $prod) {
-  return c9wep_update_add_to_cart_text($default, $prod);
+function pve_single_add_to_cart_text($default, $prod) {
+  return pve_update_add_to_cart_text($default, $prod);
   return 'Add to cart'; // Change this to change the text on the Single Product Add to cart button.
 }
 
 // Variable Product
-function c9wep_variable_add_to_cart_text($default, $prod) {
+function pve_variable_add_to_cart_text($default, $prod) {
   return 'Select options'; // Change this to change the text on the Variable Product button.
 }
 
 // Grouped Product
-function c9wep_grouped_add_to_cart_text($default, $prod) {
+function pve_grouped_add_to_cart_text($default, $prod) {
   return 'View options'; // Change this to change the text on the Grouped Product button.
 }
 
 // External Product
-function c9wep_external_add_to_cart_text($default, $prod) {
+function pve_external_add_to_cart_text($default, $prod) {
   return 'Read More'; // Change this to change the text on the External Product button.
 }
 
 // Fallback for all other product types, and returns the default text "Add to cart"
-function c9wep_add_to_cart_text($default, $prod) {
+function pve_add_to_cart_text($default, $prod) {
   return 'Add to cart'; // Change this to change the text on the Default button.
 }

@@ -20,7 +20,7 @@ define('PVE_DIR', dirname( __FILE__ ));
 
 // Adds an action to load the plugin's text domain when plugins are loaded.
 add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' );
-function c9wep_load_plugin_textdomain() {
+function pve_load_plugin_textdomain() {
     load_plugin_textdomain( 'pay-via-eth', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
@@ -29,7 +29,7 @@ require_once PVE_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging
 require_once PVE_DIR . '/functions.php'; // Load main plugin functions
 require_once PVE_DIR . '/etherscan-api/etherscan-functions.php'; // Load etherscan API functions
 require_once PVE_DIR . '/admin/ajax/ft_check_transaction_status/ft_check_transaction_status.php'; // Load transaction status check AJAX function
-require_once PVE_DIR . '/cms90-woocommerce-ethereum-payment-gateway.php'; // Load Ethereum payment gateway class for WooCommerce
+require_once PVE_DIR . '/pay-via-eth-gateway.php'; // Load Ethereum payment gateway class for WooCommerce
 require_once PVE_DIR . '/includes/form-fields.php'; // Load form field classes for the plugin
 require_once PVE_DIR . '/includes/db-functions.php'; // Load database functions for the plugin
 require_once PVE_DIR . '/ethereum_payments/ethereum_payments-init.php'; // Load Ethereum payments initialization file
@@ -45,7 +45,6 @@ require_once PVE_DIR . '/check_transaction_status-cronjob.php'; // Load cron job
 // This code section checks if the user is in the WordPress admin area.
 // If the user is in the admin area, it loads the admin.php file.
 // If the user is not in the admin area, it does not load anything.
-// The commented out line includes the c9wep-install.php file, but it is currently not being used
 if ( is_admin() ) {
     require_once PVE_DIR .'/admin/admin.php';
 }
