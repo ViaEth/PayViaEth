@@ -1,5 +1,5 @@
 <?php
-class WC_EthereumPay_Payment_Gateway extends WC_Payment_Gateway {
+class PVE_Gateway extends WC_Payment_Gateway {
     protected $simulator_mode = false;
     
     protected $PROD_ID = '';

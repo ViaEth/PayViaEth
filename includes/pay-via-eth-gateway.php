@@ -5,7 +5,7 @@
  */
 add_filter( 'woocommerce_payment_gateways', 'pve_add_gateway_class' );
 function pve_add_gateway_class( $gateways ) {
-    $gateways[] = 'PVE_Woocommerce_Ethereum_Payment_Gateway'; // your class name is here
+    $gateways[] = 'PVE_Gateway'; // your class name is here
     return $gateways;
 }
 
