@@ -35,12 +35,6 @@ require_once PVE_DIR . '/includes/db-functions.php'; // Load database functions 
 require_once PVE_DIR . '/ethereum_payments/ethereum_payments-init.php'; // Load Ethereum payments initialization file
 require_once PVE_DIR . '/ethereumpay/ethereumpay-init.php'; // Load EthereumPay initialization file
 require_once PVE_DIR . '/check_transaction_status-cronjob.php'; // Load cron job for checking transaction status
-// The following files are currently commented out and not loaded:
-// require_once C9WEP_DIR . '/woo-functions.php';
-// require_once C9WEP_DIR . '/admin/ajax/update_transaction_status/update_transaction_status.php'; 
-// require_once C9WEP_DIR . '/admin/ajax/frontend_check_transaction_status/frontend_check_transaction_status.php'; 
-// require_once C9WEP_DIR .'/frontend.php';
-// require_once C9WEP_DIR . '/tests/tests.php';
 
 // This code section checks if the user is in the WordPress admin area.
 // If the user is in the admin area, it loads the admin.php file.
