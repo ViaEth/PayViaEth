@@ -29,7 +29,7 @@ require_once PVE_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging
 require_once PVE_DIR . '/functions.php'; // Load main plugin functions
 require_once PVE_DIR . '/etherscan-api/etherscan-functions.php'; // Load etherscan API functions
 require_once PVE_DIR . '/admin/ajax/ft_check_transaction_status/ft_check_transaction_status.php'; // Load transaction status check AJAX function
-require_once PVE_DIR . '/pay-via-eth-gateway.php'; // Load Ethereum payment gateway class for WooCommerce
+require_once PVE_DIR . '/includes/class-pve-gateway.php'; // Load PVE payment gateway class for WooCommerce
 require_once PVE_DIR . '/includes/form-fields.php'; // Load form field classes for the plugin
 require_once PVE_DIR . '/includes/db-functions.php'; // Load database functions for the plugin
 require_once PVE_DIR . '/ethereum_payments/ethereum_payments-init.php'; // Load Ethereum payments initialization file
@@ -83,24 +83,5 @@ function pve_plugin_add_settings_link( $links ) {
     array_unshift($links, $settings_link);
     // Return the modified $links array
     return $links;
-}
-
-// Disable the EthereumPay payment gateway if the cart total is zero.
-function pve_payment_gateway_disable_total_amount( $available_gateways ) {
-    global $woocommerce;
-    if ( isset( $available_gateways['Payments Via Ethereum'] ) && $woocommerce->cart->total == 0 ) {
-        unset(  $available_gateways['Payments Via Ethereum'] );
-    }
-    ob_start();
-    print_r($available_gateways);
-    echo PHP_EOL;
-    echo PHP_EOL;
-    echo PHP_EOL;
-    echo PHP_EOL;
-    $data1=ob_get_clean();
-    // Log the available gateways to a file for debugging purposes.
-    file_put_contents(dirname(__FILE__)  . '/available_gateways.log',$data1,FILE_APPEND);
-    // Return the modified list of available gateways.
-    return $available_gateways;
 }
 
