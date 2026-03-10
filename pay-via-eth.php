@@ -12,11 +12,13 @@ Domain Path: /languages
 Text Domain: pay-via-eth
 */
 
+defined( 'ABSPATH' ) || exit;
+
 // Define constant for the plugin directory URL
 define('PVE_URL', plugin_dir_url( __FILE__ ));
 
 // Define constant for the plugin directory path
-define('PVE_DIR', dirname( __FILE__ ));
+define('PVE_DIR', plugin_dir_path( __FILE__ ));
 
 // Adds an action to load the plugin's text domain when plugins are loaded.
 add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' );
@@ -33,36 +35,26 @@ require_once PVE_DIR . '/includes/class-pve-gateway.php'; // Load PVE payment ga
 require_once PVE_DIR . '/includes/form-fields.php'; // Load form field classes for the plugin
 require_once PVE_DIR . '/includes/db-functions.php'; // Load database functions for the plugin
 require_once PVE_DIR . '/ethereum_payments/ethereum_payments-init.php'; // Load Ethereum payments initialization file
-require_once PVE_DIR . '/ethereumpay/ethereumpay-init.php'; // Load EthereumPay initialization file
+require_once PVE_DIR . '/includes/class-pve-init.php'; // Load pay-via-eth initialization file
+require_once PVE_DIR . '/incudes/class-pve-admin.php'; // Load admin class
 require_once PVE_DIR . '/check_transaction_status-cronjob.php'; // Load cron job for checking transaction status
 
-// This code section checks if the user is in the WordPress admin area.
-// If the user is in the admin area, it loads the admin.php file.
-// If the user is not in the admin area, it does not load anything.
-if ( is_admin() ) {
-    require_once PVE_DIR .'/admin/admin.php';
-}
+// Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
+add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );
 
 // Register activation hook for this plugin to be called upon activation.
 register_activation_hook(__FILE__, 'pve_activation');
 // Function called on plugin activation.
 function pve_activation() {
-    //Logs that the plugin has been activated.
-    if (! defined('WC_Version')){
-	return;
-    }
-    $log_string = ('Plugin Activated with WooComerce Version: '.WC_VERSION);
-    wp_wc_pve_write_log($log_string, E_USER_NOTICE);
+	//Nothing to do.
 }
 
 // Register deactivation hook for this plugin to be called upon deactivation.
 register_deactivation_hook(__FILE__, 'pve_deactivation');
 // Function called on plugin deactivation.
 function pve_deactivation() {
-    // Clear any scheduled cron jobs for checking transaction status
-    wp_clear_scheduled_hook('pve_check_transaction_status_cron_hook');
-    //Logs that the plugin has been deactivated.
-    wp_wc_pve_write_log('Plugin Deactivated', E_USER_NOTICE);
+	//Nothing to do. Cron removed for manual verification per specs.
+	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
 }
 
 // Adds a settings link to the plugin action links on the WordPress plugin page
