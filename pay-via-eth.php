@@ -27,17 +27,12 @@ function pve_load_plugin_textdomain() {
 }
 
 // Load required files and classes for the plugin
-require_once PVE_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging
-require_once PVE_DIR . '/functions.php'; // Load main plugin functions
-require_once PVE_DIR . '/etherscan-api/etherscan-functions.php'; // Load etherscan API functions
-require_once PVE_DIR . '/admin/ajax/ft_check_transaction_status/ft_check_transaction_status.php'; // Load transaction status check AJAX function
+require_once PVE_DIR . '/wp_wc_pve_logging.php'; //Plugin Logging, Will be transformed into pve specific logging at some point.
+require_once PVE_DIR . '/includes/class-pve-converter.php';
 require_once PVE_DIR . '/includes/class-pve-gateway.php'; // Load PVE payment gateway class for WooCommerce
-require_once PVE_DIR . '/includes/form-fields.php'; // Load form field classes for the plugin
-require_once PVE_DIR . '/includes/db-functions.php'; // Load database functions for the plugin
-require_once PVE_DIR . '/ethereum_payments/ethereum_payments-init.php'; // Load Ethereum payments initialization file
+require_once PVE_DIR . '/includes/class-pve-price.php';
+require_once PVE_DIR . '/includes/class-pve-admin.php'; //Load admin class
 require_once PVE_DIR . '/includes/class-pve-init.php'; // Load pay-via-eth initialization file
-require_once PVE_DIR . '/includes/class-pve-admin.php'; // Load admin class
-require_once PVE_DIR . '/check_transaction_status-cronjob.php'; // Load cron job for checking transaction status
 
 // Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
 add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );
