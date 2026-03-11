@@ -23,8 +23,7 @@ function pve_init_gateway_class() {
          */
         public function __construct() {
          
-            $this->id = 'Payments Via Ethereum'; // payment gateway plugin ID
-            $this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
+            $this->id = 'pve_gateway'; // payment gateway ID
             $this->has_fields = true; // in case you need a custom credit card form
             $this->method_title = 'Pay Via Eth';
             $this->method_description = 'Ethereum Payments for Wordpress/WooCommerce'; // will be displayed on the options page
@@ -45,29 +44,7 @@ function pve_init_gateway_class() {
             $this->enabled = $this->get_option( 'enabled' );
             $this->testmode = $this->is_test_mode();
             $this->wallet_addresses = $this->testmode ? $this->get_option( 'test_wallet_addresses' ) : $this->get_option( 'wallet_addresses' );
-            // $this->apikey = $this->testmode ? $this->get_option( 'test_apikey' ) : $this->get_option( 'apikey' );
-            $this->apikey = $this->testmode ? $this->get_option( 'test_apikey' ) : $this->get_option( 'apikey' );
-         
-            // $test_wallet_addresses=$this->get_option('test_wallet_addresses');
-            // ob_start();
-            // print_r($test_wallet_addresses);
-            // echo PHP_EOL;
-            // echo PHP_EOL;
-            // echo PHP_EOL;
-            // echo PHP_EOL;
-            // $data1=ob_get_clean();
-            // file_put_contents(dirname(__FILE__)  . '/test_wallet_addresses.log',$data1,FILE_APPEND);
-            // if($this->testmode){
-            //     $this->simulator_mode = 'yes' === $this->get_option( 'simulator_mode' );
-            // }
-            // if($this->simulator_mode){
-            //     //$this->password=c9wep_ethereumpay_get_simulator_password();
-            // }
-
             $this->icon = PVE_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
-
-            // $this->callback_url = $this->get_callback_url();//home_url('/wc-api/' . $this->id);
-            // add_action('woocommerce_api_' . $this->id, array($this, 'check_payment_response'));
 
             // This action hook saves the settings
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, function()
@@ -77,11 +54,6 @@ function pve_init_gateway_class() {
                        });
 
             add_action('woocommerce_receipt_' . $this->id, array($this, 'receipt_page'));   
-            // We need custom JavaScript to obtain a token
-            // add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
-            //add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) ); 
-            // You can also register a webhook here
-            // add_action( 'woocommerce_api_{webhook name}', array( $this, 'webhook' ) );
         }
 
         /**

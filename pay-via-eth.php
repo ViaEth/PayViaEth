@@ -62,7 +62,7 @@ function pve_deactivation() {
 add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' );
 function pve_plugin_add_settings_link( $links ) {
     // Set the URL for the settings page
-    $url=admin_url('admin.php?page=wc-settings&tab=checkout&section=ethereumpay');
+    $url=admin_url('admin.php?page=wc-settings&tab=checkout&section=pve_gateway');
     // Create the settings link HTML
     $settings_link = '<a href="'.$url.'">' . __( 'Settings' ) . '</a>';
     // Add the settings link to the beginning of the $links array
