@@ -1,1 +1,3 @@
-#Kraken fetch, transient cache, rolling average
+<?php
+
+//Kraken fetch, transient cache, rolling average
