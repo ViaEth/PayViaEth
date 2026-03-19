@@ -207,7 +207,7 @@ function pve_init_gateway_class() {
             );
         }
 
-        public function get_wallet_addresses() {
+        public function pve_get_wallet_addresses() {
           // if($this->is_test_mode()){
           //   return $this->get_option('test_wallet_addresses');
           // }else{
@@ -215,28 +215,28 @@ function pve_init_gateway_class() {
           // }
         }
 
-        public function sanitize_pve_check_transaction_status_interval( $input ) {
+        public function pve_sanitize_pve_check_transaction_status_interval( $input ) {
             pve_setup_check_transaction_status_cron_job('pve_check_transaction_status_cron_hook', $input);
             return $input; 
         }
 
-        public function sanitize_test_wallet_address( $input ) {
+        public function pve_sanitize_test_wallet_address( $input ) {
             return $input;
         }
 
-        public function sanitize_wallet_address( $input ) {
+        public function pve_sanitize_wallet_address( $input ) {
             return $input;
         }
 
-        public function get_total_time_transaction_timeout(){
+        public function pve_get_total_time_transaction_timeout(){
           return $this->get_option( 'total_time_transaction_timeout' );
         }
 
-        public function get_interval_check_status(){
+        public function pve_get_interval_check_status(){
           return $this->get_option( 'interval_to_check_transaction_status' );
 	}
 
-        public function get_ether_address_view_root_with_key( $key ) {
+        public function pve_get_ether_address_view_root_with_key( $key ) {
           if($this->is_test_mode()){
             $network=$this->get_option( 'test_network' );
           }else{
@@ -246,7 +246,7 @@ function pve_init_gateway_class() {
           return $network;//pve_get_transaction_networks($network);
         }
 
-        public function get_form_field_with_key( $key ) {
+        public function pve_get_form_field_with_key( $key ) {
           $field    = $this->plugin_id . $this->id . '_' . $key;
           return $field;
         }
@@ -260,7 +260,7 @@ function pve_init_gateway_class() {
          * @since 1.0.0
          * @return string
          */
-        public function generate_ether_addresses_html( $key, $data ) {
+        public function pve_generate_ether_addresses_html( $key, $data ) {
           // $field    = $this->plugin_id . $this->id . '_' . $key;
           $field    = $this->get_form_field_with_key($key);
           $defaults = array(
@@ -380,11 +380,11 @@ function pve_init_gateway_class() {
           return ob_get_clean();
         }
 
-        public function empty_apikey_notice() {
+        public function pve_empty_apikey_notice() {
             return '<b>Please set above apikey first if you want to check connection</b>';
         }
 
-        public function get_ether_network() {
+        public function pve_get_ether_network() {
           if($this->is_test_mode()){
             return $this->get_option( 'test_network' );
           }else{
@@ -392,7 +392,7 @@ function pve_init_gateway_class() {
           }
         }
 
-        public function get_api_args() {
+        public function pve_get_api_args() {
           if($this->is_test_mode()){
               $args=[
                   'endpoint'=>$this->get_option( 'test_network' ),
@@ -418,7 +418,7 @@ function pve_init_gateway_class() {
          * @since 1.0.0
          * @return string
          */
-        public function generate_link_html( $key, $data ) {
+        public function pve_generate_link_html( $key, $data ) {
           $field    = $this->plugin_id . $this->id . '_' . $key;
           $defaults = array(
             'class'             => 'button-secondary',
@@ -462,7 +462,7 @@ function pve_init_gateway_class() {
           return ob_get_clean();
         }
 
-        private function apply_markup( $price ) {
+        private function pve_apply_markup( $price ) {
           $markup_percent = $this->settings['markup_percent'];
           $markup_percent = ! empty( $markup_percent ) ? $markup_percent : 0;
           $multiplier     = ( $markup_percent / 100 ) + 1;
@@ -470,11 +470,11 @@ function pve_init_gateway_class() {
           return round( $price * $multiplier, 5, PHP_ROUND_HALF_UP );
         }
 
-        public function is_test_mode() {
+        public function pve_is_test_mode() {
             return 'yes' === $this->get_option( 'testmode' );
         }
 
-        public function get_eth_amount() {
+        public function pve_get_eth_amount() {
             $total    = WC()->cart->total;
             $eth_value = pve_convert_to_eth_amount($total);
             return $eth_value;
@@ -483,7 +483,7 @@ function pve_init_gateway_class() {
         /**
          * You will need it if you want your custom credit card form, Step 4 is about it
          */
-        public function payment_fields() {
+        public function pve_payment_fields() {
          
             // ok, let's display some description before the payment form
             if ( $this->description ) {
@@ -515,14 +515,13 @@ function pve_init_gateway_class() {
         /*
          * We're processing the payments here, everything about it is in Step 5
          */
-        function process_payment($order_id) {           
+        function pve_process_payment($order_id) {           
             $order = new WC_Order($order_id);  
             //we don't redirect default recipt page, we direct to post form page
-            // return array('result' => 'success', 'redirect' => c9wep_get_ethereumpay_post_form_url($args));
             return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
         }
 
-        function process_ether_payment($order_id) {           
+        function pve_process_ether_payment($order_id) {           
             global $woocommerce;
             $order = new WC_Order($order_id);  
 
@@ -545,11 +544,10 @@ function pve_init_gateway_class() {
                 'redirect' => $this->get_return_url( $order )
             );
             //we don't redirect default recipt page, we direct to post form page
-            // return array('result' => 'success', 'redirect' => c9wep_get_ethereumpay_post_form_url($args));
             // return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
         }
 
-        public function process_payment_b0( $order_id ) {
+        public function pve_process_payment_b0( $order_id ) {
          
             global $woocommerce;
          

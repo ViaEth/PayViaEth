@@ -29,7 +29,7 @@ class Converter
         'tether' => '1000000000000000000000000000000'
     ];
     
-    public function fromWei(string $amount, string $unit = 'ether'): string
+    public function pve_fromWei(string $amount, string $unit = 'ether'): string
     {
         if ($unit == 'wei') {
             return $amount;
@@ -37,7 +37,7 @@ class Converter
         return bcdiv($amount, $this->getValueOfUnit($unit), $this->getDivisionScale($amount, $unit));
     }
 
-    public function toWei(string $amount, string $unit = 'ether'): string
+    public function pve_toWei(string $amount, string $unit = 'ether'): string
     {
         if ($unit == 'wei') {
             return $amount;
@@ -45,7 +45,7 @@ class Converter
         return bcmul($amount, $this->getValueOfUnit($unit));
     }
 
-    private function getValueOfUnit(string $unit = 'ether')
+    private function pve_getValueOfUnit(string $unit = 'ether')
     {
         if (!isset($this->unitMap[$unit])) {
             $this->throwExceptionForUnit($unit);
@@ -54,7 +54,7 @@ class Converter
         return $this->unitMap[$unit];
     }
 
-    private function getDivisionScale(string $amount, string $unit)
+    private function pve_getDivisionScale(string $amount, string $unit)
     {
         if (!isset($this->unitMap[$unit])) {
             $this->throwExceptionForUnit($unit);
@@ -65,7 +65,7 @@ class Converter
         return $zeroes + $decimals;
     }
 
-    private function throwExceptionForUnit(string $unit)
+    private function pve_throwExceptionForUnit(string $unit)
     {
         $message = sprintf('A unit "%s" doesn\'t exist, please use the one of the following units: %s', $unit, implode(',', array_keys($this->unitMap)));
 
