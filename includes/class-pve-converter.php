@@ -1,5 +1,17 @@
 <?php
-class Converter
+/**
+ * PVE_Converter - Price Conversion
+ *
+ * Handles all ETH arithmetic. This means converting a USD amount to ETH using bcmath at 18 decimal precision, 
+ * and encoding the order ID fingerprint into the minor decimal places of the ETH amount. It does not fetch prices, 
+ * it does not know what the current ETH/USD rate is, and it does not write anything to the database. 
+ * It receives numbers and returns numbers. Nothing else.
+ *
+ * @package Payments_Via_Ethereum
+ * @since 1.420.69
+ */
+
+class PVE_Converter
 {
     private $unitMap = [
         'wei' => '1',

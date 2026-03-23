@@ -1,8 +1,14 @@
 <?php
 /**
- * Plugin initialisation — registers all hooks and filters after plugins_loaded.
+ * PVE_Init — registers all hooks and filters after plugins_loaded.
+ * 
+ * Handles plugin initialisation only. This means running the WooCommerce availability check on plugins_loaded, 
+ * registering PVE_Gateway with WooCommerce via the woocommerce_payment_gateways filter, 
+ * and instantiating PVE_Admin when in the admin context. It does not contain any business logic. 
+ * It does not fetch prices, process payments, or render anything. Its only job is to wire the other classes into WordPress at the correct moment.
  *
  * @package Payments_Via_Ethereum
+ * @since 1.420.69
  */
 
 defined( 'ABSPATH' ) || exit;

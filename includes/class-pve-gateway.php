@@ -1,7 +1,16 @@
 <?php
 
 /*
- * This action hook registers our PHP class as a WooCommerce payment gateway
+ * PVE_Gateway
+ *
+ * Handles the WooCommerce payment gateway integration. This means extending WC_Payment_Gateway, defining the gateway ID pve_eth, 
+ * rendering the settings fields in WooCommerce, and handling the checkout payment fields display. 
+ * It coordinates between the price class and the converter class at checkout to produce the final ETH amount and EIP-681 URI, 
+ * then passes those to the front end. It does not fetch prices directly and does not do arithmetic directly — it delegates those responsibilities to PVE_Price and PVE_Converter. 
+ * It does not render the admin pending payments page.
+ *
+ * @package Payments_Via_Ethereum
+ * @since 1.420.69
  */
 add_filter( 'woocommerce_payment_gateways', 'pve_add_gateway_class' );
 function pve_add_gateway_class( $gateways ) {
