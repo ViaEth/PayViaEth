@@ -9,6 +9,12 @@
  * it does not write to order meta, and it does not know anything about orders or the checkout process. 
  * It returns a USD price and nothing more.
  *
+ * Hooks registered by this class:
+ *
+ * Options read:
+ *
+ * Order meta read:
+ *
  * @package Payments_Via_Ethereum
  * @since 1.420.69
  */

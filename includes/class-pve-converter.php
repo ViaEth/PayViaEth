@@ -6,6 +6,12 @@
  * and encoding the order ID fingerprint into the minor decimal places of the ETH amount. It does not fetch prices, 
  * it does not know what the current ETH/USD rate is, and it does not write anything to the database. 
  * It receives numbers and returns numbers. Nothing else.
+ * 
+ * Hooks registered by this class:
+ *
+ * Options read:
+ *
+ * Order meta read:
  *
  * @package Payments_Via_Ethereum
  * @since 1.420.69

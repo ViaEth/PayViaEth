@@ -7,6 +7,12 @@
  * and instantiating PVE_Admin when in the admin context. It does not contain any business logic. 
  * It does not fetch prices, process payments, or render anything. Its only job is to wire the other classes into WordPress at the correct moment.
  *
+ * Hooks Registered by this class:
+ *
+ * Options read:
+ *
+ * Order meta read:
+ *
  * @package Payments_Via_Ethereum
  * @since 1.420.69
  */

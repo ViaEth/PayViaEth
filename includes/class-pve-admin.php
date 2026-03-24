@@ -18,7 +18,7 @@
 * - ETH price fetching or arithmetic
 * - Front-end checkout output
 *
-* Hooks registred by this class:
+* Hooks registered by this class:
 *	add_action( 'admin_menu', array( $this, 'pve_register_pending_payments_page' ) )
 *	add_action( 'admin_post_pve_approve_order', array( $this, 'pve_handle_approve_order' ) )
 *	add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) )

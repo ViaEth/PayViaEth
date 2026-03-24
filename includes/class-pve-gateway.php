@@ -9,6 +9,12 @@
  * then passes those to the front end. It does not fetch prices directly and does not do arithmetic directly — it delegates those responsibilities to PVE_Price and PVE_Converter. 
  * It does not render the admin pending payments page.
  *
+ * Hooks registered by this class:
+ *
+ * Options read:
+ *
+ * Order meta read:
+ *
  * @package Payments_Via_Ethereum
  * @since 1.420.69
  */
