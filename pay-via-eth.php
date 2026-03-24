@@ -3,7 +3,7 @@
 Plugin Name: Payments Via Ethereum 
 Plugin URI:  https://viaeth.io
 Description: Ethereum Payment Plugin
-Version:     0.420.69 
+Version:     1.420.69 
 Requires Plugins: woocommerce
 Author:      Tyler Thomas
 License:     GPLv3

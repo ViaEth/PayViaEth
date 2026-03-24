@@ -31,7 +31,7 @@ add_action( 'plugins_loaded', 'pve_init_gateway_class' );
 function pve_init_gateway_class() {
     if( !class_exists('WC_Payment_Gateway') )  return;
 
-    class PVE_Woocommerce_Ethereum_Payment_Gateway extends WC_Payment_Gateway {
+    class PVE_Gateway extends WC_Payment_Gateway {
  
         /**
          * Class constructor, more about it in Step 3
@@ -132,12 +132,6 @@ function pve_init_gateway_class() {
                     'title'       => 'Test Network',
                     'type'        => 'select',
                     'options'=>pve_get_test_networks(),
-                    // [
-                    //     'kovan'=>'Kovan Testnet',
-                    //     'ropsten'=>'Ropsten Testnet',
-                    //     'rinkeby'=>'Rinkeby Testnet',
-                    //     'goerli'=>'Goerli Testnet',
-                    // ],
                     'default'     => 'kovan',
                     'description' => 'Please make sure set your test wallet address to the same network with above setting',
                 ),
@@ -189,43 +183,10 @@ function pve_init_gateway_class() {
                     'default'     => 5,
                     'description' => 'If the browser was closed accidently when customer try to make a payment, we use this cronjob to scan the ethereum network for the order which is not expired on payment',
                 ),
-                // 'simulator_mode' => array(
-                //         'title'   => __( 'Test With Simulator', 'woocommerce' ),
-                //         'type'    => 'checkbox',
-                //         'label'   => __( 'Enable Simulator', 'woocommerce' ),
-                //         'description' => 'Enable this option to allow you test payment workflow without sending data to actually wallet address(only work in test mode)',
-                //         'default' => 'no'
-                // ),
-                // 'test_apikey' => array(
-                //     'title'       => 'Etherscan API Key(test mode)',
-                //     'type'        => 'password',
-                //     'description' => $this->get_api_description(),
-                // ),
-                // 'check_live_connection' => array(
-                //     'title'       => 'Check Live Connection',
-                //     'type'        => 'link',
-                //     'description' => 'Check Live Connection to etherscan.io with above live API Key',
-                // ),
-                // 'check_test_connection' => array(
-                //     'title'       => 'Check Test Mode Connection',
-                //     'type'        => 'link',
-                //     'description' => 'Check Test Mode Connection to etherscan.io with above test API Key and above test network',
-                // ),
-                // 'test_wallet_addresses' => array(
-                //   'title'             => __( 'Test Wallet Addresses', 'woocommerce-integration-demo' ),
-                //   'type'              => 'ether_addresses',
-                //   'addresses' => $this->get_option('test_wallet_addresses'),
-                //   'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
-                //   'sanitize_callback'=>array($this, 'sanitize_test_wallet_address'),
-                //   'desc_tip'          => true,
-                // ),
             );
         }
 
         public function pve_get_wallet_addresses() {
-          // if($this->is_test_mode()){
-          //   return $this->get_option('test_wallet_addresses');
-          // }else{
             return $this->get_option('wallet_addresses');
           // }
         }
@@ -276,7 +237,6 @@ function pve_init_gateway_class() {
          * @return string
          */
         public function pve_generate_ether_addresses_html( $key, $data ) {
-          // $field    = $this->plugin_id . $this->id . '_' . $key;
           $field    = $this->get_form_field_with_key($key);
           $defaults = array(
             'class'             => '',
