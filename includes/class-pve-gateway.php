@@ -57,8 +57,6 @@ function pve_init_gateway_class() {
             $this->title = $this->get_option( 'title' );
             $this->description = $this->get_option( 'description' );
             $this->enabled = $this->get_option( 'enabled' );
-            $this->testmode = $this->is_test_mode();
-            $this->wallet_addresses = $this->testmode ? $this->get_option( 'test_wallet_addresses' ) : $this->get_option( 'wallet_addresses' );
             $this->icon = PVE_URL . 'assets/images/64px-Ethereum-icon-purple.svg.png'; 
 
             // This action hook saves the settings
@@ -74,10 +72,6 @@ function pve_init_gateway_class() {
         /**
      * Descriptions, used on settings page.
      */
-        public function get_api_description(){
-            return 'You can get apikey from <a href="https://etherscan.io/myapikey" target="_blank">https://etherscan.io/myapikey</a>, the same apikey can be used for both test and live mode if you want,<br/>for a <b>free API plan</b>, there is a limitation on number of API call(<b>5 calls per second</b>), so, if you use a <b>free API plan</b> in a high traffic site, most of API call may failed since the limitation of API plan';
-        }
-
         public function get_wallet_addresses_description(){
             return 'When a customer make a transaction by scanning QR Code, the combination of ether amount and one of above wallet address is the only way that we can use to track the transaction from ethereum network, in short, if two customers pay the same ether amount to the same wallet address, we have no idea who paid the order, to avoid such kind of potential collision, as many as wallet addresses will be a reasonable solution';
         }
@@ -92,7 +86,6 @@ function pve_init_gateway_class() {
                     'title'       => 'Enable/Disable',
                     'label'       => 'Enable Ethereum Payment',
                     'type'        => 'checkbox',
-                    'description' => ($this->is_test_mode()) ? '<b style="color:red;">This payment is in Test Mode</b>' : '',
                     'default'     => 'no'
                 ),
                 'title' => array(
@@ -119,26 +112,6 @@ function pve_init_gateway_class() {
                   'description'       => __( $this->get_wallet_addresses_description(), 'woocommerce-integration-demo' ),
                   'sanitize_callback'=>array($this, 'sanitize_wallet_address'),//'sanitize_wallet_address',
                   'desc_tip'          => true,
-                ),
-                'testmode' => array(
-                    'title'       => 'Test mode',
-                    'label'       => 'Enable Test Mode',
-                    'type'        => 'checkbox',
-                    'description' => 'Place the payment gateway in test mode using test API keys.',
-                    'default'     => 'yes',
-                    'desc_tip'    => true,
-                ),
-                'test_network' => array(
-                    'title'       => 'Test Network',
-                    'type'        => 'select',
-                    'options'=>pve_get_test_networks(),
-                    'default'     => 'kovan',
-                    'description' => 'Please make sure set your test wallet address to the same network with above setting',
-                ),
-                'apikey' => array(
-                    'title'       => 'Etherscan API Key',
-                    'type'        => 'password',
-                    'description' => $this->get_api_description(),
                 ),
                 'check_connection' => array(
                     'title'       => 'Check Connection',
@@ -196,10 +169,6 @@ function pve_init_gateway_class() {
             return $input; 
         }
 
-        public function pve_sanitize_test_wallet_address( $input ) {
-            return $input;
-        }
-
         public function pve_sanitize_wallet_address( $input ) {
             return $input;
         }
@@ -211,16 +180,6 @@ function pve_init_gateway_class() {
         public function pve_get_interval_check_status(){
           return $this->get_option( 'interval_to_check_transaction_status' );
 	}
-
-        public function pve_get_ether_address_view_root_with_key( $key ) {
-          if($this->is_test_mode()){
-            $network=$this->get_option( 'test_network' );
-          }else{
-            $network='main';
-          }
-
-          return $network;//pve_get_transaction_networks($network);
-        }
 
         public function pve_get_form_field_with_key( $key ) {
           $field    = $this->plugin_id . $this->id . '_' . $key;
@@ -355,35 +314,6 @@ function pve_init_gateway_class() {
           return ob_get_clean();
         }
 
-        public function pve_empty_apikey_notice() {
-            return '<b>Please set above apikey first if you want to check connection</b>';
-        }
-
-        public function pve_get_ether_network() {
-          if($this->is_test_mode()){
-            return $this->get_option( 'test_network' );
-          }else{
-            return 'main';
-          }
-        }
-
-        public function pve_get_api_args() {
-          if($this->is_test_mode()){
-              $args=[
-                  'endpoint'=>$this->get_option( 'test_network' ),
-                  // 'apikey'=>$this->get_option( 'test_apikey' ),
-                  'apikey'=>$this->get_option( 'apikey' ),
-              ];
-          }else{
-              $args=[
-                  'endpoint'=>'main',
-                  'apikey'=>$this->get_option( 'apikey' ),
-              ];
-          }
-
-          return $args;
-        }
-
         /**
          * Generate Button HTML.
          *
@@ -416,19 +346,7 @@ function pve_init_gateway_class() {
             <td class="forminp">
               <fieldset>
                 <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-                <?php 
-                    // if('check_live_connection' == $key){
-                    //   $args=$this->get_api_args();
-                    // }elseif('check_test_connection' == $key){
-                    //   $args=$this->get_api_args('test');
-                    // }
-                      $args=$this->get_api_args();
-                ?>
-                <?php if(empty($args['apikey'])): ?>
-                    <?php echo $this->empty_apikey_notice(); ?>
-                <?php else: ?>
                     <a href="<?php echo pve_get_enther_price_url($args); ?>" target="_blank" class="button button-default btn btn-primary"><?php echo wp_kses_post( $data['title'] ); ?></a>
-                <?php endif;//end empty() ?>
                 <?php echo $this->get_description_html( $data ); ?>
               </fieldset>
             </td>
@@ -445,10 +363,6 @@ function pve_init_gateway_class() {
           return round( $price * $multiplier, 5, PHP_ROUND_HALF_UP );
         }
 
-        public function pve_is_test_mode() {
-            return 'yes' === $this->get_option( 'testmode' );
-        }
-
         public function pve_get_eth_amount() {
             $total    = WC()->cart->total;
             $eth_value = pve_convert_to_eth_amount($total);
@@ -463,28 +377,15 @@ function pve_init_gateway_class() {
             // ok, let's display some description before the payment form
             if ( $this->description ) {
                 // you can instructions for test mode, I mean test card numbers etc.
-                if ( $this->testmode ) {
-                    // if($this->simulator_mode){
-                    // $this->description .= '<br/> <b style="color:red;">THIS IS SIMULATOR MODE</b> <br/>There are no data will be sent to any etherum net';
-                    // $this->description  = trim( $this->description );
-                    // }else{
-                    $this->description .= '<br/> <b style="color:red;">THIS IS TEST MODE</b>';
-                    $this->description  = trim( $this->description );
-                    // }
-
-                }
                 // display the description with <p> tags etc.
                 echo wpautop( wp_kses_post( $this->description ) );
             }
-            //return ;//we skip the credit card list here         
-            ?>
-            <div class="eth-amount-wapper">
-              <div class="eth-amount-title"><span>
-                <?php echo 'Send: ' . $this->get_eth_amount() . ' ETH'; ?>
-              </span></div>
-              <input type="hidden" name="eth-amount" id="eth-amount" class="form-control" value="<?php echo $this->get_eth_amount(); ?>" required="required" pattern="" title="">
-            </div>
-            <?php
+            //<div class="eth-amount-wapper">
+             // <div class="eth-amount-title"><span>
+                //<?php echo 'Send: ' . $this->get_eth_amount() . ' ETH' >
+             // </span></div>
+             // <input type="hidden" name="eth-amount" id="eth-amount" class="form-control" required="required" pattern="" title="">
+            //</div>
         }
 
         /*
