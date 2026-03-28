@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * PVE_Gateway
  *
  * Handles the WooCommerce payment gateway integration. This means extending WC_Payment_Gateway, defining the gateway ID pve_eth, 
@@ -172,14 +172,6 @@ function pve_init_gateway_class() {
         public function pve_sanitize_wallet_address( $input ) {
             return $input;
         }
-
-        public function pve_get_total_time_transaction_timeout(){
-          return $this->get_option( 'total_time_transaction_timeout' );
-        }
-
-        public function pve_get_interval_check_status(){
-          return $this->get_option( 'interval_to_check_transaction_status' );
-	}
 
         public function pve_get_form_field_with_key( $key ) {
           $field    = $this->plugin_id . $this->id . '_' . $key;
@@ -396,89 +388,5 @@ function pve_init_gateway_class() {
             //we don't redirect default recipt page, we direct to post form page
             return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
         }
-
-        function pve_process_ether_payment($order_id) {           
-            global $woocommerce;
-            $order = new WC_Order($order_id);  
-
-            $order->payment_complete();
-            if(function_exists('wc_reduce_stock_levels')){
-              wc_reduce_stock_levels($order_id);
-            }else{
-              $order->reduce_order_stock();
-            }
- 
-            // some notes to customer (replace true with false to make it private)
-            $order->add_order_note( 'Hey, your order is paid! Thank you!', true );
- 
-            // Empty cart
-            $woocommerce->cart->empty_cart();
- 
-            // Redirect to the thank you page
-            return array(
-                'result' => 'success',
-                'redirect' => $this->get_return_url( $order )
-            );
-            //we don't redirect default recipt page, we direct to post form page
-            // return array('result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ));
-        }
-
-        public function pve_process_payment_b0( $order_id ) {
-         
-            global $woocommerce;
-         
-            // we need it to get any order detailes
-            $order = wc_get_order( $order_id );
-         
-         
-            /*
-             * Array with parameters for API interaction
-             */
-            $args = array(
-         
-         
-            );
-         
-            /*
-             * Your API interaction could be built with wp_remote_post()
-             */
-             $response = wp_remote_post( '{payment processor endpoint}', $args );
-         
-         
-             if( !is_wp_error( $response ) ) {
-         
-                 $body = json_decode( $response['body'], true );
-         
-                 // it could be different depending on your payment processor
-                 if ( $body['response']['responseCode'] == 'APPROVED' ) {
-         
-                    // we received the payment
-                    $order->payment_complete();
-                    $order->reduce_order_stock();
-         
-                    // some notes to customer (replace true with false to make it private)
-                    $order->add_order_note( 'Hey, your order is paid! Thank you!', true );
-         
-                    // Empty cart
-                    $woocommerce->cart->empty_cart();
-         
-                    // Redirect to the thank you page
-                    return array(
-                        'result' => 'success',
-                        'redirect' => $this->get_return_url( $order )
-                    );
-         
-                 } else {
-                    wc_add_notice(  'Please try again.', 'error' );
-                    return;
-                }
-         
-            } else {
-                wc_add_notice(  'Connection error.', 'error' );
-                return;
-            }
-         
-        }
-
     }
 }
