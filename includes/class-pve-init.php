@@ -21,31 +21,33 @@ defined( 'ABSPATH' ) || exit;
 
 class PVE_Init {
 
-    /**
-     * Initialise the plugin. Called on plugins_loaded.
-     * Returns early if WooCommerce is not active.
-     */
-    public static function init() {
-        if ( ! class_exists( 'WooCommerce' ) ) {
-            return;
-        }
+	/**
+	 * Initialise the plugin. Called on plugins_loaded.
+	 * Returns early if WooCommerce is not active.
+	 */
+	public static function init() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
 
-        add_filter( 'woocommerce_payment_gateways', array( __CLASS__, 'register_gateway' ) );
+		require_once PVE_DIR . 'includes/class-pve-gateway.php'; //Load PVE_Gateway class
 
-        if ( is_admin() ) {
-            $admin = new PVE_Admin();
-            $admin->init();
-        }
-    }
+		add_filter( 'woocommerce_payment_gateways', array( __CLASS__, 'register_gateway' ) );
 
-    /**
-     * Register PVE_Gateway with WooCommerce.
-     *
-     * @param array $gateways Registered payment gateways.
-     * @return array
-     */
-    public static function register_gateway( $gateways ) {
-        $gateways[] = 'PVE_Gateway';
-        return $gateways;
-    }
+		if ( is_admin() ) {
+			$admin = new PVE_Admin();
+			$admin->init();
+		}
+	}
+
+	/**
+	 * Register PVE_Gateway with WooCommerce.
+	 *
+	 * @param array $gateways Registered payment gateways.
+	 * @return array
+	 */
+	public static function register_gateway( $gateways ) {
+		$gateways[] = 'PVE_Gateway';
+		return $gateways;
+	}
 }
