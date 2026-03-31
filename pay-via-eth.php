@@ -1,15 +1,17 @@
 <?php
 /*
-Plugin Name: Payments Via Ethereum 
-Plugin URI:  https://viaeth.io
-Description: Ethereum Payment Plugin
-Version:	 1.420.69 
-Requires Plugins: woocommerce
-Author:		 Tyler Thomas
-License:	 GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Domain Path: /languages
-Text Domain: pay-via-eth
+* Plugin Name:       Payments Via Ethereum
+* Plugin URI:        https://viaeth.io
+* Description:       Ethereum Payment Plugin
+* Version:	     1.420.69
+* Requires at least: 6.4
+* Requires PHP:      8.0
+* Requires Plugins:  woocommerce
+* Author:            Tyler Thomas
+* License:           GPLv3
+* License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+* Domain Path:       /languages
+* Text Domain:       pay-via-eth
 */
 
 defined( 'ABSPATH' ) || exit;
