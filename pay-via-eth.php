@@ -3,7 +3,7 @@
 * Plugin Name:       Payments Via Ethereum
 * Plugin URI:        https://viaeth.io
 * Description:       Ethereum Payment Plugin
-* Version:	     1.420.69
+* Version:           1.420.69
 * Requires at least: 6.4
 * Requires PHP:      8.0
 * Requires Plugins:  woocommerce
@@ -15,46 +15,46 @@
 */
 
 /**
- * Payments Via Ethereum — Bootstrap
- *
- * Main plugin file. Responsible for bootstrap only — defines constants,
- * loads required files, and registers top-level hooks. No business logic
- * lives here.
- *
- * Hooks registered:
- *   add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' )
- *   add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) )
- *   add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' )
- *   register_activation_hook(   __FILE__, 'pve_activation' )
- *   register_deactivation_hook( __FILE__, 'pve_deactivation' )
- *
- * Options read:        // via get_option()
- *   none
- *
- * Options written:     // via update_option() or add_option()
- *   none
- *
- * Order meta read:     // via get_post_meta()
- *   none
- *
- * Order meta written:  // via update_post_meta()
- *   none
- *
- * Constants defined:
- *   PVE_URL — plugin directory URL
- *   PVE_DIR — plugin directory path
- *
- * Files loaded:
- *   wp_wc_pve_logging.php
- *   includes/class-pve-converter.php
- *   includes/class-pve-price.php
- *   includes/class-pve-admin.php
- *   includes/class-pve-init.php
- *   Note: class-pve-gateway.php loaded by PVE_Init::init() after plugins_loaded
- *
- * @package Payments_Via_Ethereum
- * @since   1.420.69
- */
+* Payments Via Ethereum — Bootstrap
+*
+* Main plugin file. Responsible for bootstrap only — defines constants,
+* loads required files, and registers top-level hooks. No business logic lives here.
+*
+* Hooks registered:
+*   add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' )
+*   add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) )
+*   add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' )
+*   register_activation_hook(   __FILE__, 'pve_activation' )
+*   register_deactivation_hook( __FILE__, 'pve_deactivation' )
+*
+* Options read:        // via get_option()
+*   none
+*
+* Options written:     // via update_option() or add_option()
+*   none
+*
+* Order meta read:     // via get_post_meta()
+*   none
+*
+* Order meta written:  // via update_post_meta()
+*   none
+*
+* Constants defined:
+*   PVE_VERSION — plugin version
+*   PVE_URL — plugin directory URL
+*   PVE_DIR — plugin directory path
+*
+* Files loaded:
+*   wp_wc_pve_logging.php
+*   includes/class-pve-converter.php
+*   includes/class-pve-price.php
+*   includes/class-pve-admin.php
+*   includes/class-pve-init.php
+*   Note: class-pve-gateway.php loaded by PVE_Init::init() after plugins_loaded
+*
+* @package Payments_Via_Ethereum
+* @since   1.420.69
+*/
 
 //ABSPATH guard, must be first executable line, no exceptions
 defined( 'ABSPATH' ) || exit;
