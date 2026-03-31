@@ -14,6 +14,48 @@
 * Text Domain:       pay-via-eth
 */
 
+/**
+ * Payments Via Ethereum — Bootstrap
+ *
+ * Main plugin file. Responsible for bootstrap only — defines constants,
+ * loads required files, and registers top-level hooks. No business logic
+ * lives here.
+ *
+ * Hooks registered:
+ *   add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' )
+ *   add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) )
+ *   add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' )
+ *   register_activation_hook(   __FILE__, 'pve_activation' )
+ *   register_deactivation_hook( __FILE__, 'pve_deactivation' )
+ *
+ * Options read:        // via get_option()
+ *   none
+ *
+ * Options written:     // via update_option() or add_option()
+ *   none
+ *
+ * Order meta read:     // via get_post_meta()
+ *   none
+ *
+ * Order meta written:  // via update_post_meta()
+ *   none
+ *
+ * Constants defined:
+ *   PVE_URL — plugin directory URL
+ *   PVE_DIR — plugin directory path
+ *
+ * Files loaded:
+ *   wp_wc_pve_logging.php
+ *   includes/class-pve-converter.php
+ *   includes/class-pve-price.php
+ *   includes/class-pve-admin.php
+ *   includes/class-pve-init.php
+ *   Note: class-pve-gateway.php loaded by PVE_Init::init() after plugins_loaded
+ *
+ * @package Payments_Via_Ethereum
+ * @since   1.420.69
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 // Define constant for the plugin directory URL
@@ -26,6 +68,38 @@ define('PVE_DIR', plugin_dir_path( __FILE__ ));
 add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' );
 function pve_load_plugin_textdomain() {
 	load_plugin_textdomain( 'pay-via-eth', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+// Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
+add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );
+
+// Adds a settings link to the plugin action links on the WordPress plugin page
+// Add the settings link filter to the plugin action links for this plugin
+add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' );
+function pve_plugin_add_settings_link( $links ) {
+	// Set the URL for the settings page
+	$url=admin_url('admin.php?page=wc-settings&tab=checkout&section=pve_gateway');
+	// Create the settings link HTML
+	$settings_link = '<a href="'.$url.'">' . __( 'Settings' ) . '</a>';
+	// Add the settings link to the beginning of the $links array
+	array_unshift($links, $settings_link);
+	// Return the modified $links array
+	return $links;
+}
+
+// Register activation hook for this plugin to be called upon activation.
+register_activation_hook(__FILE__, 'pve_activation');
+// Function called on plugin activation.
+function pve_activation() {
+	//Nothing to do.
+}
+
+// Register deactivation hook for this plugin to be called upon deactivation.
+register_deactivation_hook(__FILE__, 'pve_deactivation');
+// Function called on plugin deactivation.
+function pve_deactivation() {
+	//Nothing to do. Cron removed for manual verification per specs.
+	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
 }
 
 // Load required files and classes for the plugin, if a required file is missing the plugin auto deactivates.
@@ -47,37 +121,5 @@ foreach ( array(
 		return;
 	}
 	require_once PVE_DIR . $file;
-}
-
-// Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
-add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );
-
-// Register activation hook for this plugin to be called upon activation.
-register_activation_hook(__FILE__, 'pve_activation');
-// Function called on plugin activation.
-function pve_activation() {
-	//Nothing to do.
-}
-
-// Register deactivation hook for this plugin to be called upon deactivation.
-register_deactivation_hook(__FILE__, 'pve_deactivation');
-// Function called on plugin deactivation.
-function pve_deactivation() {
-	//Nothing to do. Cron removed for manual verification per specs.
-	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
-}
-
-// Adds a settings link to the plugin action links on the WordPress plugin page
-// Add the settings link filter to the plugin action links for this plugin
-add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' );
-function pve_plugin_add_settings_link( $links ) {
-	// Set the URL for the settings page
-	$url=admin_url('admin.php?page=wc-settings&tab=checkout&section=pve_gateway');
-	// Create the settings link HTML
-	$settings_link = '<a href="'.$url.'">' . __( 'Settings' ) . '</a>';
-	// Add the settings link to the beginning of the $links array
-	array_unshift($links, $settings_link);
-	// Return the modified $links array
-	return $links;
 }
 
