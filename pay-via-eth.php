@@ -56,53 +56,15 @@
  * @since   1.420.69
  */
 
+//ABSPATH guard, must be first executable line, no exceptions
 defined( 'ABSPATH' ) || exit;
 
-// Define constant for the plugin directory URL
-define('PVE_URL', plugin_dir_url( __FILE__ ));
+//Constants, defined before anything that might need them
+define( 'PVE_VERSION', get_file_data( __FILE__, array( 'Version' => 'Version' ) )['Version'] );
+define('PVE_URL', plugin_dir_url( __FILE__ ));// Define constant for the plugin directory URL
+define('PVE_DIR', plugin_dir_path( __FILE__ ));// Define constant for the plugin directory path
 
-// Define constant for the plugin directory path
-define('PVE_DIR', plugin_dir_path( __FILE__ ));
-
-// Adds an action to load the plugin's text domain when plugins are loaded.
-add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' );
-function pve_load_plugin_textdomain() {
-	load_plugin_textdomain( 'pay-via-eth', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-}
-
-// Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
-add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );
-
-// Adds a settings link to the plugin action links on the WordPress plugin page
-// Add the settings link filter to the plugin action links for this plugin
-add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' );
-function pve_plugin_add_settings_link( $links ) {
-	// Set the URL for the settings page
-	$url=admin_url('admin.php?page=wc-settings&tab=checkout&section=pve_gateway');
-	// Create the settings link HTML
-	$settings_link = '<a href="'.$url.'">' . __( 'Settings' ) . '</a>';
-	// Add the settings link to the beginning of the $links array
-	array_unshift($links, $settings_link);
-	// Return the modified $links array
-	return $links;
-}
-
-// Register activation hook for this plugin to be called upon activation.
-register_activation_hook(__FILE__, 'pve_activation');
-// Function called on plugin activation.
-function pve_activation() {
-	//Nothing to do.
-}
-
-// Register deactivation hook for this plugin to be called upon deactivation.
-register_deactivation_hook(__FILE__, 'pve_deactivation');
-// Function called on plugin deactivation.
-function pve_deactivation() {
-	//Nothing to do. Cron removed for manual verification per specs.
-	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
-}
-
-// Load required files and classes for the plugin, if a required file is missing the plugin auto deactivates.
+//Load required files and classes for the plugin, if a required file is missing the plugin auto deactivates.
 foreach ( array(
 	'wp_wc_pve_logging.php',//Plugin Logging, Will be transformed into pve specific logging at some point.
 	'includes/class-pve-converter.php',
@@ -122,4 +84,35 @@ foreach ( array(
 	}
 	require_once PVE_DIR . $file;
 }
+
+//Hooks, registered after files are loaded so callbacks exist.
+add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' );//Adds an action to load the plugin's text domain when plugins are loaded.
+add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) );//Initialises the plugin after all plugins have loaded — ensures WooCommerce is available before PVE_Init::init() runs.
+add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' );//Add the settings link filter to the plugin action links for this plugin
+
+//Activation and Deactivation hooks
+register_activation_hook(__FILE__, 'pve_activation');//Register activation hook for this plugin to be called upon activation.
+register_deactivation_hook(__FILE__, 'pve_deactivation');//Register deactivation hook for this plugin to be called upon deactivation.
+
+//Function Definitions, callbacks referenced in hooks above
+function pve_load_plugin_textdomain() {
+	load_plugin_textdomain( 'pay-via-eth', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}//Loads plugin textdomain.
+function pve_plugin_add_settings_link( $links ) {
+	// Set the URL for the settings page
+	$url=admin_url('admin.php?page=wc-settings&tab=checkout&section=pve_gateway');
+	// Create the settings link HTML
+	$settings_link = '<a href="'.$url.'">' . __( 'Settings' ) . '</a>';
+	// Add the settings link to the beginning of the $links array
+	array_unshift($links, $settings_link);
+	// Return the modified $links array
+	return $links;
+}//Adds a settings link to the plugin action links on the WordPress plugin page.
+function pve_activation() {
+	//Nothing to do.
+}//Function called on plugin activation.
+function pve_deactivation() {
+	//Nothing to do. Cron removed for manual verification per specs.
+	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
+}// Function called on plugin deactivation.
 
