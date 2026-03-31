@@ -18,3 +18,6 @@
  * @package Payments_Via_Ethereum
  * @since 1.420.69
  */
+
+defined( 'ABSPATH' ) || exit;
+

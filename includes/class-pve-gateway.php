@@ -19,6 +19,8 @@
  * @since 1.420.69
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if( !class_exists('WC_Payment_Gateway') )  return;
 
 class PVE_Gateway extends WC_Payment_Gateway {
