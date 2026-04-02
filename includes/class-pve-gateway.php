@@ -19,6 +19,7 @@
  * @since 1.420.69
  */
 
+//ABSPATH guard, must be first executable line, no exceptions
 defined( 'ABSPATH' ) || exit;
 
 if( !class_exists('WC_Payment_Gateway') )  return;

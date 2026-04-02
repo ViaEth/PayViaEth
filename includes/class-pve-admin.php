@@ -30,6 +30,7 @@
 * @since 1.420.69
 */
 
+//ABSPATH guard, must be first executable line, no exceptions
 defined( 'ABSPATH' ) || exit;
 
 class PVE_Admin {

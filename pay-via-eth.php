@@ -114,5 +114,5 @@ function pve_activation() {
 function pve_deactivation() {
 	//Nothing to do. Cron removed for manual verification per specs.
 	//Data preserved intentionally. Uninstall.php handles cleanup on delete.
-}// Function called on plugin deactivation.
+}//Function called on plugin deactivation.
 
