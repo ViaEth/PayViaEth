@@ -23,8 +23,14 @@
 *	add_action( 'admin_post_pve_approve_order', array( $this, 'pve_handle_approve_order' ) )
 *	add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) )
 *
-* Options read:
-* Order meta read:
+* Options read: // via get_option()
+* Options written: // via update_option() or add_option()
+*
+* Order meta read: // via get_post_meta()
+* Order meta written: // via update_post_meta()
+*
+* Constants defined:
+* Files loaded:
 *
 * @package Payments_Via_Ethereum
 * @since 1.420.69
@@ -40,7 +46,6 @@ class PVE_Admin {
 		add_action( 'admin_post_pve_approve_order', array( $this, 'pve_handle_approve_order' ) );
 		add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) );
 	}
-
 	public function pve_register_pending_payments_page() {}
 	public function pve_handle_approve_order() {}
 	public function pve_maybe_show_notice() {}
