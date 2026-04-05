@@ -24,6 +24,7 @@
 *   add_action( 'plugins_loaded', 'pve_load_plugin_textdomain' )
 *   add_action( 'plugins_loaded', array( 'PVE_Init', 'init' ) )
 *   add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pve_plugin_add_settings_link' )
+*   add_action('admin_notices', ... ) //conditional, only fires if a required file is missing. Doesn't check for class-pve-gateway. Will change at some point.
 *   register_activation_hook(   __FILE__, 'pve_activation' )
 *   register_deactivation_hook( __FILE__, 'pve_deactivation' )
 *
