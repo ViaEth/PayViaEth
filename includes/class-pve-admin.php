@@ -24,13 +24,22 @@
 *   add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) )
 *
 * Options read: // via get_option()
+*   none
+*
 * Options written: // via update_option() or add_option()
+*   none
 *
 * Order meta read: // via get_post_meta()
+*   none
+*
 * Order meta written: // via update_post_meta()
+*   none
 *
 * Constants defined:
+*   none
+*
 * Files loaded:
+*   none
 *
 * @package Payments_Via_Ethereum
 * @since 1.420.69

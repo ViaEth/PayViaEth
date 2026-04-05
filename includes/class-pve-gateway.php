@@ -10,6 +10,7 @@
 * It does not render the admin pending payments page.
 *
 * Hooks registered:
+*   none
 *
 * Options read: // via get_option()
 *   woocommerce_pve_gateway_settings[ title ]
@@ -21,10 +22,16 @@
 *   woocommerce_pve_gateway_settings
 *
 * Order meta read: // via get_post_meta()
-* Order meta written: // via update_post_meta()
+*   none
 *
-* Constants define:
+* Order meta written: // via update_post_meta()
+*   none
+*
+* Constants defined:
+*   none
+*
 * Files loaded:
+*   none
 *
 * @package Payments_Via_Ethereum
 * @since 1.420.69
