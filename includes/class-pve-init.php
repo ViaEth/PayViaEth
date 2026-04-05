@@ -8,6 +8,7 @@
 * It does not fetch prices, process payments, or render anything. Its only job is to wire the other classes into WordPress at the correct moment.
 *
 * Hooks Registered:
+*   add_filter( 'woocommerce_payment_gateways', array( __CLASS__, 'register_gateway' ) )
 *
 * Options read: // via get_option()
 * Options written: // via update_option() or add_option()
