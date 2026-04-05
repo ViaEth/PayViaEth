@@ -12,7 +12,13 @@
 * Hooks registered:
 *
 * Options read: // via get_option()
+*   woocommerce_pve_gateway_settings[ title ]
+*   woocommerce_pve_gateway_settings[ description ]
+*   woocommerce_pve_gateway_settings[ enabled ]
+*   woocommerce_pve_gateway_settings[ wallet_addresses ]
+*
 * Options written: // via update_option() or add_option()
+*   woocommerce_pve_gateway_settings
 *
 * Order meta read: // via get_post_meta()
 * Order meta written: // via update_post_meta()
