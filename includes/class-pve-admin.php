@@ -19,7 +19,7 @@
 * - Front-end checkout output
 *
 * Hooks registered by this class:
-*   add_action( 'admin_menu', array( $this, 'pve_register_pending_payments_page' ) )
+*   add_action( 'admin_menu', array( $this, 'pve_register_ethereum_payments_page' ) )
 *   add_action( 'admin_post_pve_approve_order', array( $this, 'pve_handle_approve_order' ) )
 *   add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) )
 *
@@ -51,11 +51,44 @@ defined( 'ABSPATH' ) || exit;
 class PVE_Admin {
 
 	public function init() {
-		add_action( 'admin_menu', array( $this, 'pve_register_pending_payments_page' ) );
+		add_action( 'admin_menu', array( $this, 'pve_register_ethereum_payments_page' ) );
 		add_action( 'admin_post_pve_approve_order', array( $this, 'pve_handle_approve_order' ) );
 		add_action( 'admin_notices', array( $this, 'pve_maybe_show_notice' ) );
 	}
-	public function pve_register_pending_payments_page() {}
+
+	/**
+	* Registers the Ethereum Payments submenu page under WooCommerce.
+	*
+	* Hooked to admin_menu. Adds a submenu under the WooCommerce parent
+	* so the page appears in the WooCommerce section of the sidebar.
+	* Rendering is handled by pve_render_ethereum_payments_page().
+	*
+	* @since 1.420.69
+	* @return void
+	*/
+	public function pve_register_ethereum_payments_page() {
+		add_submenu_page(
+			'woocommerce',
+			__( 'Ethereum Payments', 'pay-via-eth' ),
+			__( 'Ethereum Payments', 'pay-via-eth' ),
+			'manage_woocommerce',
+			'pve-ethereum-payments',
+			array( $this, 'pve_render_ethereum_payments_page' )
+		);
+	}
+
+	/**
+	* Renders the Ethereum Payments admin page.
+	*
+	* Callback for the submenu page registered in
+	* pve_register_ethereum_payments_page(). Table structure
+	* and empty state implemented in P03.T3.2 and P03.T3.3.
+	*
+	* @since 1.420.69
+	* @return void
+	*/
+	public function pve_render_ethereum_payments_page() {}
+
 	public function pve_handle_approve_order() {}
 	public function pve_maybe_show_notice() {}
 }
