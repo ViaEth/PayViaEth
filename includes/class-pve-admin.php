@@ -77,17 +77,58 @@ class PVE_Admin {
 		);
 	}
 
+
 	/**
-	* Renders the Ethereum Payments admin page.
+	* Renders the Pending ETH Payments admin page.
 	*
-	* Callback for the submenu page registered in
-	* pve_register_ethereum_payments_page(). Table structure
-	* and empty state implemented in P03.T3.2 and P03.T3.3.
+	* Outputs the page wrapper, title, and pending payments table.
+	* Capability check is enforced here in addition to registration.
+	* Table columns: Order ID, Date, USD Amount, Quoted ETH,
+	* Assigned Address, Explorer Link, Action.
 	*
 	* @since 1.420.69
 	* @return void
 	*/
-	public function pve_render_ethereum_payments_page() {}
+	public function pve_render_ethereum_payments_page() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'pay-via-eth' ) );
+		}
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Pending ETH Payments', 'pay-via-eth' ); ?></h1>
+
+			<table class="wp-list-table widefat fixed striped">
+				<thead>
+					<tr>
+						<th scope="col"><?php esc_html_e( 'Order ID', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Date', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'USD Amount', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Quoted ETH', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Assigned Address', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Explorer Link', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Action', 'pay-via-eth' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="7"><?php esc_html_e( 'No pending ETH payments to verify.', 'pay-via-eth' ); ?></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th scope="col"><?php esc_html_e( 'Order ID', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Date', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'USD Amount', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Quoted ETH', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Assigned Address', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Explorer Link', 'pay-via-eth' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Action', 'pay-via-eth' ); ?></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<?php
+	}
 
 	public function pve_handle_approve_order() {}
 	public function pve_maybe_show_notice() {}
