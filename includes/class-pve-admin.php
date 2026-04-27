@@ -67,13 +67,14 @@ class PVE_Admin {
 	* @return void
 	*/
 	public function pve_register_ethereum_payments_page() {
-		add_submenu_page(
-			'woocommerce',
+		add_menu_page(
 			__( 'Ethereum Payments', 'pay-via-eth' ),
-			__( 'Ethereum Payments', 'pay-via-eth' ),
+			__( 'Ethereum ', 'pay-via-eth' ),
 			'manage_woocommerce',
-			'pve-ethereum-payments',
-			array( $this, 'pve_render_ethereum_payments_page' )
+			'pve-eth-payments',
+			array( $this, 'pve_render_ethereum_payments_page' ),
+			'dashicons-money',
+			56
 		);
 	}
 
