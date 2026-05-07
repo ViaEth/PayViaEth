@@ -14,6 +14,9 @@
 * Text Domain:       pay-via-eth
 */
 
+//ABSPATH guard, must be first executable line, no exceptions
+defined( 'ABSPATH' ) || exit;
+
 /**
 * Payments Via Ethereum — Bootstrap
 *
@@ -56,9 +59,6 @@
 * @package Payments_Via_Ethereum
 * @since   1.420.69
 */
-
-//ABSPATH guard, must be first executable line, no exceptions
-defined( 'ABSPATH' ) || exit;
 
 //Constants, defined before anything that might need them
 define( 'PVE_VERSION', get_file_data( __FILE__, array( 'Version' => 'Version' ) )['Version'] );
