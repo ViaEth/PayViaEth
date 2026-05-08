@@ -16,16 +16,18 @@ foreach ( $options as $option ) {
 //Remove Plugin Transients
 delete_transient( 'pve_eth_usd_price' ); //Should be a for each loop at some point
 
-//Remove Plugin Logs (At some point pve logs should be moved and stored in wp-content/logs/pve/)
-$log_dir = WP_CONTENT_DIR . '/uploads/pve-logs/';
-if ( is_dir( $log_dir ) ) {
-    $files = glob( $log_dir . '*.log' );
-    if ( $files ) {
-        foreach ( $files as $file ) {
-            wp_delete_file( $file );
-        }
-    }
-    rmdir( $log_dir );
-}
-// ..etc., based on what needs to be removed
+//Remove plugin logs from wp-content/uploads/pve-logs/
+$upload_dir = wp_upload_dir();
+$log_dir    = trailingslashit( $upload_dir['basedir'] ) . 'pve-logs';
 
+global $wp_filesystem;
+if ( empty( $wp_filesystem ) ) {
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+}
+
+if ( $wp_filesystem->is_dir( $log_dir ) ) {
+	$wp_filesystem->rmdir( $log_dir, true ); // true = recursive, removes directory and all contents
+}
+
+// ..etc., based on what needs to be removed

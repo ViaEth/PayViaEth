@@ -106,7 +106,7 @@ class PVE_Gateway extends WC_Payment_Gateway {
 					'default'	  => 'Pay Via Eth.',
 				),
 				'wallet_addresses' => array( // up to 10 merchant ETH addresses with rotation
-				  'title'			  => __( 'Wallet Addresses', 'woocommerce-integration-demo' ),
+				  'title'			  => __( 'Wallet Addresses', 'pay-via-eth' ),
 				  'type'			  => 'ether_addresses',
 				  'addresses' => $this->get_option('wallet_addresses'),
 				  'description'		  => "Merchant Wallets Address" ,

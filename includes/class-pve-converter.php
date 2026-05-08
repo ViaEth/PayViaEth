@@ -100,6 +100,6 @@ class PVE_Converter
 	private function pve_throwExceptionForUnit(string $unit){
 		$message = sprintf('A unit "%s" doesn\'t exist, please use the one of the following units: %s', $unit, implode(',', array_keys($this->unitMap)));
 
-		throw new \UnexpectedValueException($message);
+		throw new \UnexpectedValueException( esc_html($message) );
 	}
 }
