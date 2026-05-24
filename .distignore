@@ -1,0 +1,22 @@
+# Development environment
+.wp-env.json
+.gitignore
+.distignore
+.github/
+.git/
+
+# Build tooling and dependencies
+
+# Tests and fixtures
+
+# Documentation that shouldn't ship in the production zip
+*.md
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor noise
+*.swp
+*.swo
+*~

@@ -76,7 +76,7 @@ class PVE_Gateway extends WC_Payment_Gateway {
 	*/
 	public function save_settings() {
 			$this->process_admin_options();
-			wp_wc_pve_write_log( 'Plugin Settings Saved', E_USER_NOTICE );
+			pve_log( 'Plugin Settings Saved', E_USER_NOTICE );
 	}
 
 	/**
